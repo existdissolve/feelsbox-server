@@ -31,9 +31,9 @@ app.get('/weather', (req, res) => {
 });
 
 io.on('connection', socket => {
-  console.log('a user connected');
+    console.log('a user connected');
 });
 
 server.listen(port, () => {
-  console.log('listening on *:3000');
+    console.log('listening on *:3000');
 });
