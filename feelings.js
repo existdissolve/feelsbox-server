@@ -193,6 +193,62 @@ const bourbonfull = [
     {i:63, c: "383030"}
 ];
 
+const nachos = [
+    {i:1, c: "ffeb3b"},
+    {i:2, c: "ffeb3b"},
+    {i:3, c: "ffeb3b"},
+    {i:4, c: "ffeb3b"},
+    {i:5, c: "ffeb3b"},
+    {i:6, c: "ffeb3b"},
+    {i:7, c: "ffffff"},
+    {i:8, c: "ffeb3b"},
+
+    {i:9, c: "ffeb3b"},
+    {i:10, c: "ffeb3b"},
+    {i:11, c: "f44336"},
+    {i:12, c: "ffeb3b"},
+    {i:13, c: "ffffff"},
+    {i:14, c: "ffeb3b"},
+    {i:15, c: "ffeb3b"},
+    {i:16, c: "ffeb3b"},
+
+    {i:18, c: "f44336"},
+    {i:19, c: "f44336"},
+    {i:20, c: "ffeb3b"},
+    {i:21, c: "ffeb3b"},
+    {i:22, c: "ffeb3b"},
+    {i:23, c: "ffeb3b"},
+
+    {i:26, c: "ffeb3b"},
+    {i:27, c: "ffeb3b"},
+    {i:28, c: "ffeb3b"},
+    {i:29, c: "ffeb3b"},
+    {i:30, c: "4caf50"},
+    {i:31, c: "4caf50"},
+
+    {i:35, c: "ffeb3b"},
+    {i:36, c: "ffeb3b"},
+    {i:37, c: "4caf50"},
+    {i:38, c: "ffeb3b"},
+    {i:39, c: "4caf50"},
+    {i:40, c: "4caf50"},
+
+    {i:43, c: "ffeb3b"},
+    {i:44, c: "ffeb3b"},
+    {i:45, c: "4caf50"},
+    {i:46, c: "ffeb3b"},
+    {i:47, c: "4caf50"},
+    {i:48, c: "4caf50"},
+
+    {i:52, c: "ffeb3b"},
+    {i:53, c: "ffeb3b"},
+    {i:54, c: "4caf50"},
+    {i:55, c: "4caf50"},
+
+    {i:60, c: "ffeb3b"},
+    {i:61, c: "ffeb3b"}
+];
+
 const template = [
     {i:1, c: ""},
     {i:2, c: ""},
@@ -271,5 +327,6 @@ module.exports = {
     love,
     smiley,
     bourbon,
-    bourbonfull
+    bourbonfull,
+    nachos
 };
