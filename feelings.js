@@ -294,6 +294,37 @@ const flame = [
     {i:64, c: "ff9800"}
 ];
 
+const flowers = [
+    {i:3, c: "673ab7"},
+
+    {i:10, c: "673ab7"},
+    {i:11, c: "ffeb3b"},
+    {i:12, c: "673ab7"},
+    {i:14, c: "e91e63"},
+
+    {i:17, c: "4caf50"},
+    {i:19, c: "673ab7"},
+    {i:21, c: "e91e63"},
+    {i:22, c: "ffeb3b"},
+    {i:23, c: "e91e63"},
+
+    {i:26, c: "4caf50"},
+    {i:30, c: "e91e63"},
+    {i:32, c: "4caf50"},
+
+    {i:36, c: "ff9800"},
+    {i:39, c: "4caf50"},
+
+    {i:43, c: "ff9800"},
+    {i:44, c: "ffeb3b"},
+    {i:45, c: "ff9800"},
+
+    {i:52, c: "ff9800"},
+    {i:54, c: "4caf50"},
+
+    {i:61, c: "4caf50"}
+];
+
 const template = [
     {i:1, c: ""},
     {i:2, c: ""},
@@ -374,5 +405,6 @@ module.exports = {
     bourbon,
     bourbonfull,
     nachos,
-    flame
+    flame,
+    flowers
 };
