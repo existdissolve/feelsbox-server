@@ -10,6 +10,10 @@ const io = socketio(server);
 const port = process.env.PORT || 3000;
 
 app.get('/emote/:feeling', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype');
+    res.setHeader('Access-Control-Allow-Credentials', true);
     const {feeling} = req.params;
     const diagram = feelings[feeling];
 
