@@ -570,5 +570,6 @@ module.exports = {
     flowers,
     guitar,
     coffee,
-    record
+    record,
+    plant
 };
