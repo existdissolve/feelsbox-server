@@ -510,7 +510,7 @@ const nn1 = [
     {i:54, c: "FF9800"}
 ];
 
-const template = [
+const rainbow = [
     {i:3, c: "e91e63"},
     {i:4, c: "e91e63"},
     {i:5, c: "ff9800"},
