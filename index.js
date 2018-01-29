@@ -1,13 +1,26 @@
 import express from 'express';
 import http from 'http';
 import socketio from 'socket.io';
-
-import feelings from './feelings';
+import firebase from 'firebase';
+import {firebaseConfig, user} from './config';
 
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 const port = process.env.PORT || 3000;
+let data = {};
+
+firebase.initializeApp(firebaseConfig);
+firebase.auth().signInWithEmailAndPassword(user.email, user.password);
+firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+        // user is signed in
+        var feelings = firebase.database().ref('feelings').once('value').then(snapshot => {
+            data = snapshot.val()
+            console.log('Data is ready to go!');
+        });
+    }
+});
 
 app.get('/emote/:feeling', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,7 +28,15 @@ app.get('/emote/:feeling', (req, res) => {
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype');
     res.setHeader('Access-Control-Allow-Credentials', true);
     const {feeling} = req.params;
-    const diagram = feelings[feeling];
+    const raw = data[feeling];
+    const diagram = [];
+
+    Object.keys(raw).forEach((item, index) => {
+        diagram.push({
+            i: item,
+            color: raw[item].c
+        });
+    });
 
     if (diagram) {
         io.emit('emote', diagram);
