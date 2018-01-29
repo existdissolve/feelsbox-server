@@ -34,7 +34,7 @@ app.get('/emote/:feeling', (req, res) => {
     Object.keys(raw).forEach((item, index) => {
         diagram.push({
             i: item,
-            color: raw[item].c
+            c: raw[item].c
         });
     });
 
