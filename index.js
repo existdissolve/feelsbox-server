@@ -109,11 +109,12 @@ app.get('/emote/:feeling', (req, res) => {
     const {feeling} = req.params;
     const raw = data[feeling];
     const diagram = [];
+    const pixels = raw.pixels;
 
-    Object.keys(raw.pixels).forEach((item, index) => {
+    Object.keys(pixels).forEach((item, index) => {
         diagram.push({
             i: item,
-            c: raw[item].c
+            c: pixels[item].c
         });
     });
 
