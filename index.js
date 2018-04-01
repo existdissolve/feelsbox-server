@@ -32,11 +32,15 @@ app.post('/upload', (req, res) => {
     const busboy = new Busboy({ headers: req.headers });
     const feel = {};
     let name;
+    let category;
     console.log('uploading!!!')
 
     busboy.on('field', function (fieldname, val) {
         if (fieldname === 'emoji') {
             name = val;
+        }
+        if (fieldname === 'category') {
+            category = val;
         }
     });
 
@@ -78,7 +82,10 @@ app.post('/upload', (req, res) => {
                 const newKey = `feelings/${name}`;
 
                 firebase.database().ref().update({
-                    [newKey]: feel
+                    [newKey]: {
+                        category,
+                        pixels: feel
+                    }
                 }).then(result => {
                     refreshData();
                     res.end('File has finished uploading successfully!');
