@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import bodyParser from 'body-parser';
 import http from 'http';
 import socketio from 'socket.io';
 import firebase from 'firebase';
@@ -10,6 +11,7 @@ import {firebaseConfig, user} from './config';
 
 const app = express();
 app.use(cors());
+app.use(bodyParser.json());
 const server = http.createServer(app);
 const io = socketio(server);
 const port = process.env.PORT || 3000;
