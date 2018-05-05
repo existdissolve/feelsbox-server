@@ -125,8 +125,8 @@ app.get('/emote/:feeling', (req, res) => {
     res.send('it worked');
 });
 
-app.post('/emote/pixels', (req, res) => {
-    const pixels = req.body;
+app.post('/emoji', (req, res) => {
+    const {pixels} = req.body;
     const diagram = [];
 
     Object.keys(pixels).forEach(item => {
@@ -141,6 +141,34 @@ app.post('/emote/pixels', (req, res) => {
     }
 
     res.send(diagram);
+});
+
+app.put('/emoji', (req, res) => {
+    const {pixels, name, category} = req.body;
+
+    if (name && category && pixels) {
+        firebase.database().ref().update({
+            [name]: {
+                category,
+                pixels
+            }
+        }).then(result => {
+            refreshData();
+            res.end('Emoji was added successfully!');
+        }).catch(err => {
+            res.end('Huh, something went wrong. <works on my machine>');
+        });
+    }
+});
+
+app.get('/emoji/:name', (req, res) => {
+    const {name} = req.params;
+    const emoji = data[feeling];
+
+    res.send({
+        success: !!emoji,
+        emoji
+    });
 });
 
 app.get('/stop', (req, res) => {
