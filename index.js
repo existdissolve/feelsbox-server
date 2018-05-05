@@ -125,6 +125,28 @@ app.get('/emote/:feeling', (req, res) => {
     res.send('it worked');
 });
 
+app.post('/emote/pixels', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    const {pixels} = req.body;
+    const diagram = [];
+
+    Object.keys(pixels).forEach(item => {
+        diagram.push({
+            i: item,
+            c: pixels[item].c
+        });
+    });
+
+    if (diagram.length) {
+        io.emit('emote', diagram);
+    }
+
+    res.send(diagram);
+});
+
 app.get('/stop', (req, res) => {
     io.emit('stop');
     res.send('');
