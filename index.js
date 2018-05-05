@@ -147,8 +147,10 @@ app.put('/emoji', (req, res) => {
     const {pixels, name, category} = req.body;
 
     if (name && category && pixels) {
+        const newKey = `feelings/${name}`;
+
         firebase.database().ref().update({
-            [name]: {
+            [newKey]: {
                 category,
                 pixels
             }
