@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import http from 'http';
 import socketio from 'socket.io';
 import firebase from 'firebase';
@@ -8,6 +9,7 @@ import Busboy from 'busboy';
 import {firebaseConfig, user} from './config';
 
 const app = express();
+app.use(cors());
 const server = http.createServer(app);
 const io = socketio(server);
 const port = process.env.PORT || 3000;
@@ -102,10 +104,6 @@ app.post('/upload', (req, res) => {
 });
 
 app.get('/emote/:feeling', (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype');
-    res.setHeader('Access-Control-Allow-Credentials', true);
     const {feeling} = req.params;
     const raw = data[feeling];
     const diagram = [];
@@ -126,10 +124,6 @@ app.get('/emote/:feeling', (req, res) => {
 });
 
 app.post('/emote/pixels', (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype');
-    res.setHeader('Access-Control-Allow-Credentials', true);
     const {pixels} = req.body;
     const diagram = [];
 
