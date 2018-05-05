@@ -163,7 +163,7 @@ app.put('/emoji', (req, res) => {
 
 app.get('/emoji/:name', (req, res) => {
     const {name} = req.params;
-    const emoji = data[feeling];
+    const emoji = data[name];
 
     res.send({
         success: !!emoji,
