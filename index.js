@@ -124,7 +124,7 @@ app.get('/emote/:feeling', (req, res) => {
 });
 
 app.post('/emote/pixels', (req, res) => {
-    const {pixels} = req.body;
+    const pixels = req.body;
     const diagram = [];
 
     Object.keys(pixels).forEach(item => {
