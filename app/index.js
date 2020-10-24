@@ -16,6 +16,7 @@ import {GraphQLLocalStrategy, buildContext} from "graphql-passport";
 import {ApolloServer} from 'apollo-server-express';
 import {connect} from '-/mongodb';
 
+import {init} from '-/socket';
 import config from '-/../config';
 import graphqlSchema from '-/graphql/schema';
 import CategoryAPI from '-/graphql/datasource/Category';
@@ -137,6 +138,8 @@ const start = async() => {
     }, app);
 
     await connect();
+
+    init(server);
 
     mountMiddleware(app);
     initializePassport(app);
