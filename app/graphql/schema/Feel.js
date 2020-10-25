@@ -10,6 +10,7 @@ export const typeDefs = gql`
 
     type FeelFrame {
         brightness: Float
+        duration: Int
         isThumb: Boolean
         pixels: [FeelFramePixel]
     }
@@ -42,6 +43,7 @@ export const typeDefs = gql`
 
     input FeelFrameInput {
         brightness: Float
+        duration: Int
         isThumb: Boolean
         pixels: [FeelFramePixelInput]
     }
