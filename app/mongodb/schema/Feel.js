@@ -13,12 +13,16 @@ const FeelSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Category'
     },
-    fps: Number,
+    duration: Number,
     frames: [{
         _id: false,
         active: {
             type: Boolean,
             default: true
+        },
+        brightness: {
+            type: Number,
+            default: 1
         },
         isThumb: {
             type: Boolean,
@@ -27,7 +31,6 @@ const FeelSchema = new Schema({
         pixels: [{
             _id: false,
             color: String,
-            brightness: Number,
             position: Number
         }]
     }],

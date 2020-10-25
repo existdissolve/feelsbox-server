@@ -5,11 +5,11 @@ import socket from '-/socket';
 export const typeDefs = gql`
     type FeelFramePixel {
         color: String
-        brightness: Float
         position: Int
     }
 
     type FeelFrame {
+        brightness: Float
         isThumb: Boolean
         pixels: [FeelFramePixel]
     }
@@ -18,7 +18,7 @@ export const typeDefs = gql`
         _id: ID
         active: Boolean
         category: Category
-        fps: Int
+        duration: Int
         frames: [FeelFrame]
         isOwner: Boolean
         isSubscribed: Boolean
@@ -29,7 +29,7 @@ export const typeDefs = gql`
     }
 
     type FeelTest {
-        fps: Int
+        duration: Int
         frames: [FeelFrame]
         repeat: Boolean
         reverse: Boolean
@@ -37,11 +37,11 @@ export const typeDefs = gql`
 
     input FeelFramePixelInput {
         color: String
-        brightness: Float
         position: Int
     }
 
     input FeelFrameInput {
+        brightness: Float
         isThumb: Boolean
         pixels: [FeelFramePixelInput]
     }
@@ -54,7 +54,7 @@ export const typeDefs = gql`
 
     input FeelInput {
         category: ID
-        fps: Int
+        duration: Int
         frames: [FeelFrameInput]
         name: String
         private: Boolean
@@ -63,7 +63,7 @@ export const typeDefs = gql`
     }
 
     input TestFeelInput {
-        fps: Int
+        duration: Int
         frames: [FeelFrameInput]
         repeat: Boolean
         reverse: Boolean
