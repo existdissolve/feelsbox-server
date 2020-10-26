@@ -5,7 +5,8 @@
   "main": "app/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./node_modules/.bin/nodemon --inspect app/index.js"
+    "start": "./node_modules/.bin/nodemon --inspect app/index.js",
+    "import": "./node_modules/.bin/nodemon --inspect app/import.js"
   },
   "author": "Joel Watson",
   "license": "ISC",
