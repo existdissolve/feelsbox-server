@@ -17,7 +17,6 @@ import {ApolloServer} from 'apollo-server-express';
 import {connect} from '-/mongodb';
 
 import {init} from '-/socket';
-import config from '-/../config';
 import graphqlSchema from '-/graphql/schema';
 import CategoryAPI from '-/graphql/datasource/Category';
 import DeviceAPI from '-/graphql/datasource/Device';
@@ -47,7 +46,7 @@ const graphQLAuthentication = (req, res, next) => {
 };
 
 const mountMiddleware = app => {
-    const {sessionSecret} = config;
+    const sessionSecret = process.env.SESSION_SECRET;
     const MongoStore = connectSession(expressSession);
 
     app.use(cors());

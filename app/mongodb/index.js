@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import {get} from 'lodash';
 import logger from 'bristol';
 
-import config from '-/../config';
 import CategorySchema from '-/mongodb/schema/Category';
 import DeviceSchema from '-/mongodb/schema/Device';
 import DeviceGroupSchema from '-/mongodb/schema/DeviceGroup';
@@ -18,7 +17,7 @@ const initializeModels = () => {
 }
 
 export const connect = async(keepTrying = true) => {
-    const connectionString = get(config, 'mongodb.connectionString');
+    const connectionString = process.env.MONGODB_CONNECTION_STRING;
 
     mongoose.connect(connectionString, {
         autoReconnect: true,
