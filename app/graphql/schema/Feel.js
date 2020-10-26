@@ -76,6 +76,7 @@ export const typeDefs = gql`
         editFeel(_id: ID!, data: FeelInput!): Feel @isOwner(type: "feel")
         removeFeel(_id: ID!): Feel
         subscribe(_id: ID!): Feel
+        sendFeel(_id: ID!): Null
         testFeel(feel: TestFeelInput!): Null
         unsubscribe(_id: ID!): Feel
     }
@@ -130,6 +131,12 @@ const subscribe = async(root, params, context) => {
     return dataSources.feelAPI.subscribe(params);
 };
 
+const sendFeel = async(root, params, context) => {
+    const {dataSources} = context;
+
+    return dataSources.feelAPI.send(params);
+};
+
 const testFeel = async(root, params, context) => {
     socket().emit('emote', params)
 };
@@ -146,6 +153,7 @@ export const resolvers = {
         editFeel,
         removeFeel,
         subscribe,
+        sendFeel,
         testFeel,
         unsubscribe
     },

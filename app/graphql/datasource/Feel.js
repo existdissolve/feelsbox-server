@@ -1,4 +1,5 @@
 import MongooseAPI from '-/graphql/datasource/Mongoose';
+import socket from '-/socket';
 
 export default class FeelAPI extends MongooseAPI {
     constructor() {
@@ -50,6 +51,17 @@ export default class FeelAPI extends MongooseAPI {
 
             return feel;
         });
+    }
+
+    async send(params) {
+        const {_id} = params;
+        const feel = await this.get(_id);
+
+        if (feel) {
+            socket().emit('emote', {feel: feel.toObject()});
+        }
+
+        return;
     }
 
     async subscribe(params) {
