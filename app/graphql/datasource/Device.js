@@ -6,7 +6,8 @@ export default class DeviceAPI extends MongooseAPI {
     }
 
     async collect(params) {
-        const user = this.getUser();
+        const user = await this.getUserInstance();
+        const defaultDevice = user.get('defaultDevice') || '';
 
         params.query = {
             $or: [{
@@ -19,7 +20,8 @@ export default class DeviceAPI extends MongooseAPI {
         const devices = await super.collect(params);
 
         return devices.map(device => {
-            device.isOwner = device.owner.toString() === user.toString();
+            device.isOwner = device.owner.toString() === user._id.toString();
+            device.isDefault = device._id.toString() === defaultDevice.toString();
 
             return device;
         });
@@ -47,6 +49,13 @@ export default class DeviceAPI extends MongooseAPI {
         }
 
         return device.generateCode(_id);
+    }
+
+    async getDeviceCodes(params) {
+        const {devices} = params;
+        const instances = await this.Model.find({_id: {$in: devices}});
+
+        return instances.map(device => device.code);
     }
 
     async setPermissions(params) {

@@ -53,12 +53,39 @@ export default class FeelAPI extends MongooseAPI {
         });
     }
 
-    async send(params) {
+    async copy(params) {
         const {_id} = params;
+        const user = this.getUser();
+        const feel = await this.get(_id);
+
+        return this.Model.copy(feel, {user});
+    }
+
+    async send(params) {
+        const {_id, data = {}} = params;
+        const {devices = []} = data;
         const feel = await this.get(_id);
 
         if (feel) {
-            socket().emit('emote', {feel: feel.toObject()});
+            const deviceAPI = this.getApi('device');
+            const rooms = [];
+
+            if (!devices.length) {
+                const userInstance = await this.getUserInstance();
+                const defaultDevice = userInstance.get('defaultDevice');
+                const device = await deviceAPI.get(defaultDevice);
+                const code = device.get('code');
+
+                rooms.push(code);
+            } else {
+                const codes = await deviceAPI.getDeviceCodes(data);
+
+                rooms.push(...codes);
+            }
+
+            rooms.forEach(room => {
+                socket().to(room).emit('emote', {feel: feel.toObject()});
+            });
         }
 
         return;
@@ -80,6 +107,26 @@ export default class FeelAPI extends MongooseAPI {
         feel.isSubscribed = true;
 
         return feel;
+    }
+
+    async test(params) {
+        const userInstance = await this.getUserInstance();
+        const defaultDevice = userInstance.get('defaultDevice');
+
+        if (!defaultDevice) {
+            throw new Error('Default device hasn\'t been set');
+        }
+
+        const deviceAPI = this.getApi('device');
+        const device = await deviceAPI.get(defaultDevice);
+
+        if (!device) {
+            throw new Error('Could not find device');
+        }
+
+        const code = device.get('code');
+
+        socket().to(code).emit('emote', params);
     }
 
     async unsubscribe(params) {

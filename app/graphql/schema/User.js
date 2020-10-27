@@ -12,6 +12,7 @@ export const typeDefs = gql`
 
     extend type Mutation {
         addUser(data: UserInput!): User
+        setDefaultDevice(_id: ID!): Null
     }
 `;
 
@@ -21,8 +22,15 @@ const addUser = async(root, params, context) => {
     return dataSources.userAPI.add(params);
 };
 
+const setDefaultDevice = async(root, params, context) => {
+    const {dataSources} = context;
+
+    return dataSources.userAPI.setDefaultDevice(params);
+};
+
 export const resolvers = {
     Mutation: {
-        addUser
+        addUser,
+        setDefaultDevice
     }
 };

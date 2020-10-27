@@ -71,12 +71,17 @@ export const typeDefs = gql`
         reverse: Boolean
     }
 
+    input SendFeelInput {
+        devices: [ID]
+    }
+
     extend type Mutation {
         addFeel(data: FeelInput!): Feel
+        copyFeel(_id: ID!): Null
         editFeel(_id: ID!, data: FeelInput!): Feel @isOwner(type: "feel")
         removeFeel(_id: ID!): Feel
         subscribe(_id: ID!): Feel
-        sendFeel(_id: ID!): Null
+        sendFeel(_id: ID!, data: SendFeelInput): Null
         testFeel(feel: TestFeelInput!): Null
         unsubscribe(_id: ID!): Feel
     }
@@ -95,6 +100,12 @@ const addFeel = async(root, params, context) => {
     const {dataSources} = context;
 
     return dataSources.feelAPI.add(params);
+};
+
+const copyFeel = async(root, params, context) => {
+    const {dataSources} = context;
+
+    return dataSources.feelAPI.copy(params);
 };
 
 const editFeel = async(root, params, context) => {
@@ -138,7 +149,9 @@ const sendFeel = async(root, params, context) => {
 };
 
 const testFeel = async(root, params, context) => {
-    socket().emit('emote', params)
+    const {dataSources} = context;
+
+    return dataSources.feelAPI.test(params);
 };
 
 const unsubscribe = async(root, params, context) => {
@@ -150,6 +163,7 @@ const unsubscribe = async(root, params, context) => {
 export const resolvers = {
     Mutation: {
         addFeel,
+        copyFeel,
         editFeel,
         removeFeel,
         subscribe,

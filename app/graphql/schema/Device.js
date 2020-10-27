@@ -11,6 +11,7 @@ export const typeDefs = gql`
         access: [DeviceAccess]
         activation: Date
         code: String
+        isDefault: Boolean
         isOwner: Boolean
         name: String
         owner: User

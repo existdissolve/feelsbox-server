@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import {pick} from 'lodash';
 
 import {defaultSchemaOptions} from './utils';
 
@@ -86,6 +87,17 @@ FeelSchema.methods.toggleSubscription = function(subscribe) {
             }
         }
     })
+};
+
+FeelSchema.statics.copy = function(feel, opts = {}) {
+    const {user} = opts;
+    const payload = pick(feel, ['active', 'duration', 'frames', 'name', 'repeat', 'reverse']);
+
+    payload.private = true;
+    payload.owner = user;
+    payload.category = '000000000000000000000000';
+
+    return this.create(payload);
 };
 
 export default FeelSchema;

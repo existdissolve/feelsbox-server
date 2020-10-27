@@ -47,9 +47,6 @@ class BaseAuthenticationDirective extends SchemaDirectiveVisitor {
                 const {_id} = payload;
 
                 if (_id && type) {
-                    console.log(type)
-                    console.log(_id)
-                    console.log(strategy)
                     const instance = await dataSources[`${type}API`].get(_id);
 
                     if (!instance) {
