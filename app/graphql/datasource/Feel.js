@@ -1,3 +1,5 @@
+import {cloneDeep, pick} from 'lodash';
+
 import MongooseAPI from '-/graphql/datasource/Mongoose';
 import socket from '-/socket';
 
@@ -64,10 +66,13 @@ export default class FeelAPI extends MongooseAPI {
     async send(params) {
         const {_id, data = {}} = params;
         const {devices = []} = data;
+        const user = this.getUser();
         const feel = await this.get(_id);
+        const deviceIds = cloneDeep(devices);
 
         if (feel) {
             const deviceAPI = this.getApi('device');
+            const historyAPI = this.getApi('history');
             const rooms = [];
 
             if (!devices.length) {
@@ -76,6 +81,7 @@ export default class FeelAPI extends MongooseAPI {
                 const device = await deviceAPI.get(defaultDevice);
                 const code = device.get('code');
 
+                deviceIds.push(defaultDevice);
                 rooms.push(code);
             } else {
                 const codes = await deviceAPI.getDeviceCodes(data);
@@ -86,6 +92,18 @@ export default class FeelAPI extends MongooseAPI {
             rooms.forEach(room => {
                 socket().to(room).emit('emote', {feel: feel.toObject()});
             });
+
+            const historyPayload = {
+                ...pick(feel, ['duration', 'frames', 'name', 'repeat', 'reverse']),
+                createdBy: user
+            };
+
+            for (const deviceId of deviceIds) {
+                await historyAPI.add({
+                    ...historyPayload,
+                    device: deviceId
+                });
+            }
         }
 
         return;

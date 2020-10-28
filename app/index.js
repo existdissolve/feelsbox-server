@@ -22,6 +22,7 @@ import CategoryAPI from '-/graphql/datasource/Category';
 import DeviceAPI from '-/graphql/datasource/Device';
 import DeviceGroupAPI from '-/graphql/datasource/DeviceGroup';
 import FeelAPI from '-/graphql/datasource/Feel';
+import HistoryAPI from '-/graphql/datasource/History';
 import UserAPI from '-/graphql/datasource/User';
 
 logger.addTarget('console').withFormatter(palin);
@@ -105,6 +106,7 @@ const initializeApolloServer = (app, server) => {
             deviceAPI: new DeviceAPI(),
             deviceGroupAPI: new DeviceGroupAPI(),
             feelAPI: new FeelAPI(),
+            historyAPI: new HistoryAPI(),
             userAPI: new UserAPI()
         }),
         schema: graphqlSchema,
