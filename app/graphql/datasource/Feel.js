@@ -55,6 +55,19 @@ export default class FeelAPI extends MongooseAPI {
         });
     }
 
+    async cloneFromHistory(params) {
+        const {_id} = params;
+        const user = this.getUser();
+        const historyAPI = this.getApi('history');
+        const history = await historyAPI.get(_id);
+
+        if (!history) {
+            throw new Error(`Could not find history for ${_id}`);
+        }
+
+        return this.Model.cloneFromHistory(history, {user});
+    }
+
     async copy(params) {
         const {_id} = params;
         const user = this.getUser();
@@ -94,8 +107,10 @@ export default class FeelAPI extends MongooseAPI {
             });
 
             const historyPayload = {
-                ...pick(feel, ['duration', 'frames', 'name', 'repeat', 'reverse']),
-                createdBy: user
+                createdBy: user,
+                feelSnapshot: {
+                    ...pick(feel, ['duration', 'frames', 'name', 'repeat', 'reverse'])
+                }
             };
 
             for (const deviceId of deviceIds) {

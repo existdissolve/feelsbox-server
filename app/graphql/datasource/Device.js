@@ -5,7 +5,7 @@ export default class DeviceAPI extends MongooseAPI {
         super('Device');
     }
 
-    async collect(params) {
+    async collect(params = {}) {
         const user = await this.getUserInstance();
         const defaultDevice = user.get('defaultDevice') || '';
 

@@ -3,6 +3,7 @@ import {pick} from 'lodash';
 
 import {defaultSchemaOptions} from './utils';
 
+const BLANK_CATEGORY = '000000000000000000000000';
 const {Schema} = mongoose;
 
 const FeelSchema = new Schema({
@@ -89,13 +90,29 @@ FeelSchema.methods.toggleSubscription = function(subscribe) {
     })
 };
 
+FeelSchema.statics.cloneFromHistory = function(history, opts = {}) {
+    const {user} = opts;
+    const {feelSnapshot} = history;
+    const payload = {
+        ...feelSnapshot,
+        active: true,
+        category: BLANK_CATEGORY,
+        createdBy: user,
+        owner: user,
+        private: true
+    };
+
+    return this.create(payload);
+}
+
 FeelSchema.statics.copy = function(feel, opts = {}) {
     const {user} = opts;
     const payload = pick(feel, ['active', 'duration', 'frames', 'name', 'repeat', 'reverse']);
 
+    payload.createdBy = user;
     payload.private = true;
     payload.owner = user;
-    payload.category = '000000000000000000000000';
+    payload.category = BLANK_CATEGORY;
 
     return this.create(payload);
 };

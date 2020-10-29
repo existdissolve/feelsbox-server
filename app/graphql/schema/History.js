@@ -3,17 +3,18 @@ import {gql} from 'apollo-server-express';
 export const typeDefs = gql`
     type History @mongoose(model: "History") {
         _id: ID
+        createdAt: Date
         createdBy: User
         device: Device
-        duration: Int
-        frames: [FeelFrame]
-        name: String
-        repeat: Boolean
-        reverse: Boolean
+        feelSnapshot: FeelSnapshot
+    }
+
+    input HistoryCriteriaInput {
+        device: ID!
     }
 
     extend type Query {
-        history: [History]
+        history(criteria: HistoryCriteriaInput): [History]
     }
 `;
 

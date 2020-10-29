@@ -29,6 +29,14 @@ export const typeDefs = gql`
         reverse: Boolean
     }
 
+    type FeelSnapshot {
+        duration: Int
+        frames: [FeelFrame]
+        name: String
+        repeat: Boolean
+        reverse: Boolean
+    }
+
     type FeelTest {
         duration: Int
         frames: [FeelFrame]
@@ -77,6 +85,7 @@ export const typeDefs = gql`
 
     extend type Mutation {
         addFeel(data: FeelInput!): Feel
+        cloneFromHistory(_id: ID!): Null
         copyFeel(_id: ID!): Null
         editFeel(_id: ID!, data: FeelInput!): Feel @isOwner(type: "feel")
         removeFeel(_id: ID!): Feel
@@ -100,6 +109,12 @@ const addFeel = async(root, params, context) => {
     const {dataSources} = context;
 
     return dataSources.feelAPI.add(params);
+};
+
+const cloneFromHistory = async(root, params, context) => {
+    const {dataSources} = context;
+
+    return dataSources.feelAPI.cloneFromHistory(params);
 };
 
 const copyFeel = async(root, params, context) => {
@@ -163,6 +178,7 @@ const unsubscribe = async(root, params, context) => {
 export const resolvers = {
     Mutation: {
         addFeel,
+        cloneFromHistory,
         copyFeel,
         editFeel,
         removeFeel,
