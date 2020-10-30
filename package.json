@@ -9,7 +9,7 @@
     "build-server": "./node_modules/.bin/babel -d ./build ./app --copy-files",
     "clean": "rm -rf build &&  rm -rf server && mkdir build && mkdir server",
     "start": "./node_modules/.bin/nodemon --inspect app/index.js",
-    "serve": "heroku local",
+    "serve": "node ./build/index.js",
     "import": "./node_modules/.bin/nodemon --inspect app/import.js"
   },
   "author": "Joel Watson",
