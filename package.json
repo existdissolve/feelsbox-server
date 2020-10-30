@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run clean && npm run build-server",
     "build-server": "./node_modules/.bin/babel -d ./build ./app --copy-files",
-    "clean": "rm -rf build &&  rm -rf server && mkdir build && mkdir server",
+    "clean": "rm -rf build && mkdir build",
     "start": "./node_modules/.bin/nodemon --inspect app/index.js",
     "serve": "node ./build/index.js",
     "import": "./node_modules/.bin/nodemon --inspect app/import.js"
