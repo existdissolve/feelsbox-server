@@ -49,12 +49,14 @@ const graphQLAuthentication = (req, res, next) => {
 const mountMiddleware = app => {
     const sessionSecret = process.env.SESSION_SECRET;
     const MongoStore = connectSession(expressSession);
+    const env = process.env.NODE_ENV;
+    const domain = env === 'production' ? 'feelsbox-server-v2.herokuapp.com' : 'feelsbox.local';
 
     app.use(cors());
     app.use(bodyParser.json());
     app.use(expressSession({
         cookie: {
-            domain: 'feelsbox.local',
+            domain,
             httpOnly: false,
             secure: true
         },
