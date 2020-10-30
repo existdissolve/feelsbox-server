@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';
 import expressSession from 'express-session';
 import connectSession from 'connect-mongo';
 import passport from 'passport';
-import https from 'https';
+import http from 'http';
 import logger from 'bristol';
 import palin from 'palin';
 import mongoose from 'mongoose';
@@ -131,12 +131,7 @@ const start = async() => {
 
     app.set('trust proxy', true);
 
-    const key = await fs.readFile('./feelsbox.local-key.pem');
-    const cert = await fs.readFile('./feelsbox.local.pem');
-    const server = https.createServer({
-        cert,
-        key
-    }, app);
+    const server = http.createServer(app);
 
     await connect();
 
