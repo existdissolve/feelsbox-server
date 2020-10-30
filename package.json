@@ -5,8 +5,11 @@
   "main": "app/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "./node_modules/.bin/nodemon --inspect app/index.js",
-    "start": "babel-node app/index.js",
+    "build": "npm run clean && npm run build-server",
+    "build-server": "./node_modules/.bin/babel -d ./build ./app --copy-files",
+    "clean": "rm -rf build &&  rm -rf server && mkdir build && mkdir server",
+    "start": "./node_modules/.bin/nodemon --inspect app/index.js",
+    "serve": "heroku local",
     "import": "./node_modules/.bin/nodemon --inspect app/import.js"
   },
   "author": "Joel Watson",
