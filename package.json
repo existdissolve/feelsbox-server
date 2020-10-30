@@ -5,8 +5,8 @@
   "main": "app/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./node_modules/.bin/nodemon --inspect app/index.js",
-    "serve": "babel-node index.js --presets env",
+    "dev": "./node_modules/.bin/nodemon --inspect app/index.js",
+    "start": "babel-node index.js --presets env",
     "import": "./node_modules/.bin/nodemon --inspect app/import.js"
   },
   "author": "Joel Watson",
