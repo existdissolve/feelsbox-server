@@ -1,7 +1,10 @@
 import {cloneDeep, pick} from 'lodash';
-
+import logger from 'bristol';
+import palin from 'palin';
 import MongooseAPI from '-/graphql/datasource/Mongoose';
 import socket from '-/socket';
+
+logger.addTarget('console').withFormatter(palin);
 
 export default class FeelAPI extends MongooseAPI {
     constructor() {
@@ -103,6 +106,7 @@ export default class FeelAPI extends MongooseAPI {
             }
 
             rooms.forEach(room => {
+                logger.info('pushing to room', room)
                 socket().to(room).emit('emote', {feel: feel.toObject()});
             });
 
