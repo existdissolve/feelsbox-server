@@ -1,5 +1,7 @@
 import MongooseAPI from '-/graphql/datasource/Mongoose';
 
+import socket from '-/socket';
+
 export default class DeviceAPI extends MongooseAPI {
     constructor() {
         super('Device');
@@ -58,6 +60,22 @@ export default class DeviceAPI extends MongooseAPI {
         return instances.map(device => device.code);
     }
 
+    async getDeviceCode(params) {
+        const userInstance = await this.getUserInstance();
+        const defaultDevice = userInstance.get('defaultDevice');
+        const device = await this.get(defaultDevice);
+
+        return device.get('code');
+    }
+
+    async restart(params) {
+        const {_id} = params;
+        const device = await this.get(_id);
+        const {code: room} = device;
+
+        socket().to(room).emit('restart');
+    };
+
     async setPermissions(params) {
         const {_id, data = {}} = params;
         const device = await this.get(_id);
@@ -75,4 +93,18 @@ export default class DeviceAPI extends MongooseAPI {
 
         return this.Model.submitCode(code, {user});
     }
+
+    async turnOff(params) {
+        const {_id} = params;
+        const device = await this.get(_id);
+        const {code: room} = device;
+
+        socket().to(room).emit('stop');
+    };
+
+    async viewWeather(params) {
+        const room = await this.getDeviceCode();
+
+        socket().to(room).emit('weather');
+    };
 }

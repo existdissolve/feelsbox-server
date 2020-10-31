@@ -31,8 +31,11 @@ export const typeDefs = gql`
         activate(code: String!): Null
         editDevice(_id: ID!, data: DeviceInput!): Null @isOwner(type: "device")
         generateDeviceCode(_id: ID!): String @isOwner(type: "device")
+        restart(_id: ID!): Null @isOwner(type: "device")
         setDevicePermissions(_id: ID!, data: DeviceAccessInput!): Null @isOwner(type: "device")
         submitAccessCode(code: Int!): Null
+        turnOff(_id: ID!): Null @isOwner(type: "device")
+        viewWeather: Null @isOwner(type: "device")
     }
 
     extend type Query {
@@ -71,6 +74,12 @@ const generateDeviceCode = async(root, params, context) => {
     return dataSources.deviceAPI.generateCode(params);
 };
 
+const restart = async(root, params, context) => {
+    const {dataSources} = context;
+
+    return dataSources.deviceAPI.restart(params);
+};
+
 const setDevicePermissions = async(root, params, context) => {
     const {dataSources} = context;
 
@@ -83,13 +92,28 @@ const submitAccessCode = async(root, params, context) => {
     return dataSources.deviceAPI.submitCode(params);
 }
 
+const turnOff = async(root, params, context) => {
+    const {dataSources} = context;
+
+    return dataSources.deviceAPI.turnOff(params);
+};
+
+const viewWeather = async(root, params, context) => {
+    const {dataSources} = context;
+
+    return dataSources.deviceAPI.viewWeather(params);
+};
+
 export const resolvers = {
     Mutation: {
         activate,
         editDevice,
         generateDeviceCode,
+        restart,
         setDevicePermissions,
-        submitAccessCode
+        submitAccessCode,
+        turnOff,
+        viewWeather
     },
     Query: {
         device,
