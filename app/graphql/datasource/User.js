@@ -1,4 +1,9 @@
+import logger from 'bristol';
+import palin from 'palin';
+
 import MongooseAPI from '-/graphql/datasource/Mongoose';
+
+logger.addTarget('console').withFormatter(palin);
 
 export default class UserAPI extends MongooseAPI {
     constructor() {
@@ -10,10 +15,20 @@ export default class UserAPI extends MongooseAPI {
         const user = await this.Model.findOne({email});
 
         if (user) {
-            const {user: authenticatedUser} = await this.context.authenticate("graphql-local", {email});
+            logger.info(`Found user for email: ${email}`);
 
-            await this.context.login(authenticatedUser);
+            try {
+                logger.info(`Trying to create session for ${email}`);
+
+                const {user: authenticatedUser} = await this.context.authenticate("graphql-local", {email});
+
+                await this.context.login(authenticatedUser);
+            } catch (ex) {
+                logger.error(ex);
+            }
         }
+
+        logger.info(`Was user logged in? ${!!user}`);
 
         return !!user;
     }
