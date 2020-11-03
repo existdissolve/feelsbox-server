@@ -27,13 +27,23 @@ export default class MongooseAPI extends BaseAPI {
         });
     }
 
-    add(params) {
+    async add(params) {
         const payload = get(params, 'data', params);
         const user = this.getUser();
+        const userInstance = await this.getUserInstance();
         const opts = {user};
 
         if (user) {
+            payload.createdBy = user;
             payload.owner = user;
+        }
+
+        if (userInstance) {
+            const {jointAccounts = []} = userInstance;
+
+            jointAccounts.push(user);
+
+            payload.owners = jointAccounts;
         }
 
         if (typeof this.Model.add === 'function') {

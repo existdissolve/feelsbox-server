@@ -15,6 +15,7 @@ export const typeDefs = gql`
         isOwner: Boolean
         name: String
         owner: User
+        owners: [User]
     }
 
     input DeviceInput {

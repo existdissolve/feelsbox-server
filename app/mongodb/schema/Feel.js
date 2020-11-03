@@ -49,6 +49,10 @@ const FeelSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
+    owners: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     private: {
         type: Boolean,
         default: true
@@ -90,28 +94,36 @@ FeelSchema.methods.toggleSubscription = function(subscribe) {
     })
 };
 
-FeelSchema.statics.cloneFromHistory = function(history, opts = {}) {
+FeelSchema.statics.cloneFromHistory = async function(history, opts = {}) {
     const {user} = opts;
     const {feelSnapshot} = history;
+    const User = mongoose.model('User');
+    const userInstance = await User.get(user);
+    const {jointAccounts = []} = userInstance;
     const payload = {
         ...feelSnapshot,
         active: true,
         category: BLANK_CATEGORY,
         createdBy: user,
         owner: user,
+        owners: jointAccounts.push(user),
         private: true
     };
 
     return this.create(payload);
 }
 
-FeelSchema.statics.copy = function(feel, opts = {}) {
+FeelSchema.statics.copy = async function(feel, opts = {}) {
     const {user} = opts;
     const payload = pick(feel, ['active', 'duration', 'frames', 'name', 'repeat', 'reverse']);
+    const User = mongoose.model('User');
+    const userInstance = await User.get(user);
+    const {jointAccounts = []} = userInstance;
 
     payload.createdBy = user;
     payload.private = true;
     payload.owner = user;
+    payload.owners = jointAccounts.push(user);
     payload.category = BLANK_CATEGORY;
 
     return this.create(payload);

@@ -53,7 +53,9 @@ class BaseAuthenticationDirective extends SchemaDirectiveVisitor {
                         throw new Error('Resource could not be found');
                     }
 
-                    if (instance.owner.toString() !== user) {
+                    const owners = instance.owners.map(owner => owner.toString());
+
+                    if (!owners.includes(user)) {
                         throw new Error('User does not have access to the requested resource');
                     }
                 }

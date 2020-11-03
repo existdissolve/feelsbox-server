@@ -6,6 +6,7 @@ export const typeDefs = gql`
         active: Boolean
         isOwner: Boolean
         owner: User
+        owners: [User]
         name: String
     }
 

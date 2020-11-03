@@ -13,7 +13,7 @@ export default class DeviceAPI extends MongooseAPI {
 
         params.query = {
             $or: [{
-                owner: user
+                owners: user
             }, {
                 'access.user': user
             }]
@@ -22,7 +22,9 @@ export default class DeviceAPI extends MongooseAPI {
         const devices = await super.collect(params);
 
         return devices.map(device => {
-            device.isOwner = device.owner.toString() === user._id.toString();
+            const owners = device.owners.map(owner => owner.toString());
+
+            device.isOwner = owners.includes(user._id.toString());
             device.isDefault = device._id.toString() === defaultDevice.toString();
 
             return device;

@@ -22,14 +22,14 @@ export default class FeelAPI extends MongooseAPI {
             active: true,
             ...searchType === 'OWNER' && {
                 $or: [{
-                    owner: user
+                    owners: user
                 }, {
                     _id: {$in: subscriptions}
                 }]
             },
             ...searchType !== 'OWNER' && {
                 private: {$ne: true},
-                owner: {$ne: user}
+                owners: {$ne: user}
             },
             ...text && {
                 name: {
@@ -49,9 +49,10 @@ export default class FeelAPI extends MongooseAPI {
         }
 
         return feels.map(feel => {
-            const {_id, owner = ''} = feel;
+            const {_id, owners = []} = feel;
+            const allOwners = owners.map(owner => owner.toString());
 
-            feel.isOwner = owner.toString() === user.toString();
+            feel.isOwner = allOwners.includes(user.toString());
             feel.isSubscribed = subscriptions.some(sub => sub.toString() === _id.toString());
 
             return feel;

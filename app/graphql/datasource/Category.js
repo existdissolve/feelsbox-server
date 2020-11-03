@@ -11,11 +11,11 @@ export default class CategoryAPI extends MongooseAPI {
 
         params.query = {
             ...isMine && {
-                owner: user
+                owners: user
             },
             ...!isMine && {
                 $or: [{
-                    owner: user
+                    owners: user
                 }, {
                     global: true
                 }]
@@ -25,7 +25,9 @@ export default class CategoryAPI extends MongooseAPI {
         const categories = await super.collect(params);
 
         return categories.map(category => {
-            category.isOwner = category.owner.toString() === user.toString();
+            const owners = category.owners.map(owner => owner.toString());
+
+            category.isOwner = owners.includes(user.toString());
 
             return category;
         });

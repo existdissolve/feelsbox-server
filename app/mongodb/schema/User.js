@@ -12,6 +12,10 @@ const UserSchema = new Schema({
         type: String,
         unique: true
     },
+    jointAccounts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     name: String,
     photo: String,
     provider: {

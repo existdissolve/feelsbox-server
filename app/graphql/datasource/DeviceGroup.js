@@ -8,7 +8,7 @@ export default class DeviceGroupAPI extends MongooseAPI {
     collect(params) {
         const user = this.getUser();
 
-        params.query = {owner: user};
+        params.query = {owners: user};
 
         return super.collect(params);
     }

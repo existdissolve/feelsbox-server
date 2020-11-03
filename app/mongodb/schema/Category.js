@@ -16,7 +16,11 @@ const CategorySchema = new Schema({
     owner: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }
+    },
+    owners: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }]
 }, defaultSchemaOptions);
 
 module.exports = CategorySchema;

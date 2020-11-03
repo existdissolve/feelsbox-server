@@ -31,7 +31,11 @@ const DeviceSchema = new Schema({
     owner: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }
+    },
+    owners: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }]
 }, defaultSchemaOptions);
 
 DeviceSchema.methods.edit = function(data) {
@@ -103,7 +107,7 @@ DeviceSchema.statics.submitCode = async function(code, opts = {}) {
     const device = await this.findOne({
         'access.user': {$ne: user},
         'accessCodes.code': code,
-        owner: {$ne: user}
+        owners: {$ne: user}
     });
 
     if (!device) {

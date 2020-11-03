@@ -14,7 +14,11 @@ export default class HistoryAPI extends MongooseAPI {
         // collect() will get all devices for this user
         const devices = await deviceAPI.collect();
         // see if
-        const isOwner = devices.some(device => device.owner.toString() === user.toString() && device._id.toString() === deviceId);
+        const isOwner = devices.some(device => {
+            const owners = device.owners.map(owner => owner.toString());
+
+            return owners.includes(user.toString()) && device._id.toString() === deviceId
+        });
 
         if (!isOwner) {
             throw new Error(`User does have access to requested device history: ${deviceId}`);
