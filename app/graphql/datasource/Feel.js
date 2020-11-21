@@ -51,9 +51,12 @@ export default class FeelAPI extends MongooseAPI {
         return feels.map(feel => {
             const {_id, owners = []} = feel;
             const allOwners = owners.map(owner => owner.toString());
+            const frame = feel.frames.find(frame => frame.isThumb) || feel.frames[0];
 
+            frame.pixels = frame.pixels.filter(pixel => pixel.color && pixel.position != null);
             feel.isOwner = allOwners.includes(user.toString());
             feel.isSubscribed = subscriptions.some(sub => sub.toString() === _id.toString());
+            feel.frames = [frame];
 
             return feel;
         });
