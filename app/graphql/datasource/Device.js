@@ -78,6 +78,14 @@ export default class DeviceAPI extends MongooseAPI {
         socket().to(room).emit('restart');
     };
 
+    async setBrightness(params) {
+        const {_id, brightness} = params;
+        const device = await this.get(_id);
+        const {code: room} = device;
+
+        socket().to(room).emit('brightness', brightness);
+    }
+
     async setPermissions(params) {
         const {_id, data = {}} = params;
         const device = await this.get(_id);

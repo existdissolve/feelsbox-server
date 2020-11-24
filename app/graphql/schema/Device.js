@@ -33,6 +33,7 @@ export const typeDefs = gql`
         editDevice(_id: ID!, data: DeviceInput!): Null @isOwner(type: "device")
         generateDeviceCode(_id: ID!): String @isOwner(type: "device")
         restart(_id: ID!): Null @isOwner(type: "device")
+        setBrightness(_id: ID!, brightness: Int!): Null @isOwner(type: "device")
         setDevicePermissions(_id: ID!, data: DeviceAccessInput!): Null @isOwner(type: "device")
         submitAccessCode(code: Int!): Null
         turnOff(_id: ID!): Null @isOwner(type: "device")
@@ -80,6 +81,12 @@ const restart = async(root, params, context) => {
 
     return dataSources.deviceAPI.restart(params);
 };
+
+const setBrightness = async(root, params, context) => {
+    const {dataSources} = context;
+
+    return dataSources.deviceAPI.setBrightness(params);
+}
 
 const setDevicePermissions = async(root, params, context) => {
     const {dataSources} = context;
