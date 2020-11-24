@@ -18,7 +18,7 @@ export const typeDefs = gql`
     type Feel @mongoose(model: "Feel") {
         _id: ID
         active: Boolean
-        category: Category
+        categories: [Category]
         duration: Int
         frames: [FeelFrame]
         isOwner: Boolean
@@ -63,7 +63,7 @@ export const typeDefs = gql`
     }
 
     input FeelInput {
-        category: ID
+        categories: [ID]
         duration: Int
         frames: [FeelFrameInput]
         name: String

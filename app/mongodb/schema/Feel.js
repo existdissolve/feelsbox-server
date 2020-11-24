@@ -11,6 +11,10 @@ const FeelSchema = new Schema({
         type: Boolean,
         default: true
     },
+    categories: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Category'
+    }],
     category: {
         type: Schema.Types.ObjectId,
         ref: 'Category'
@@ -103,7 +107,7 @@ FeelSchema.statics.cloneFromHistory = async function(history, opts = {}) {
     const payload = {
         ...feelSnapshot,
         active: true,
-        category: BLANK_CATEGORY,
+        categories: [BLANK_CATEGORY],
         createdBy: user,
         owner: user,
         owners: jointAccounts.push(user),
@@ -124,7 +128,7 @@ FeelSchema.statics.copy = async function(feel, opts = {}) {
     payload.private = true;
     payload.owner = user;
     payload.owners = jointAccounts.push(user);
-    payload.category = BLANK_CATEGORY;
+    payload.categories = [BLANK_CATEGORY];
 
     return this.create(payload);
 };
