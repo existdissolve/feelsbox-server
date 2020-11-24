@@ -118,6 +118,7 @@ export const resolvers = {
         editDevice,
         generateDeviceCode,
         restart,
+        setBrightness,
         setDevicePermissions,
         submitAccessCode,
         turnOff,
