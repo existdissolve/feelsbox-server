@@ -87,11 +87,12 @@ export default class FeelAPI extends MongooseAPI {
         const {feels: _ids, data = {}} = params;
         const {devices = [], duration} = data;
         const user = this.getUser();
-        const feels = await this.collect({
+        const feels = await super.collect({
             query: {
                 _id: {$in: _ids}
             }
         });
+
         const deviceIds = cloneDeep(devices);
 
         if (feels.length) {
@@ -107,7 +108,7 @@ export default class FeelAPI extends MongooseAPI {
             feels.forEach(feelInstance => {
                 feel.frames.push(...feelInstance.frames);
             })
-            console.log(feel);
+
             if (!devices.length) {
                 const userInstance = await this.getUserInstance();
                 const defaultDevice = userInstance.get('defaultDevice');
