@@ -124,7 +124,7 @@ export default class FeelAPI extends MongooseAPI {
 
             rooms.forEach(room => {
                 logger.info('pushing to room', room)
-                socket().to(room).emit('emote', {feel: feel.toObject()});
+                socket().to(room).emit('emote', {feel});
             });
         }
 
