@@ -18,6 +18,14 @@ const UserSchema = new Schema({
     }],
     name: String,
     photo: String,
+    push: {
+        endpoint: String,
+        expirationTime: String,
+        keys: {
+            p256dh: String,
+            auth: String
+        }
+    },
     provider: {
         type: String,
         enum: ['facebook', 'google']
@@ -33,6 +41,12 @@ UserSchema.methods.setDefaultDevice = function(_id) {
 
     return this.update(payload);
 };
+
+UserSchema.methods.subscribeToPush = function(push) {
+    return this.update({
+        $set: {push}
+    });
+}
 
 UserSchema.methods.toggleSubscription = function(_id, subscribe) {
     return this.update({

@@ -55,6 +55,16 @@ export default class UserAPI extends MongooseAPI {
         return userInstance.toggleSubscription(_id, true);
     }
 
+    async subscribeToPush(params) {
+        const userInstance = await this.getUserInstance();
+
+        if (!userInstance) {
+            return;
+        }
+
+        return userInstance.subscribeToPush(params);
+    }
+
     async unsubscribe(params) {
         const {_id} = params;
         const userInstance = await this.getUserInstance();
