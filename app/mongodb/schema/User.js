@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
+import logger from 'bristol';
+import palin from 'palin';
 
 import {defaultSchemaOptions} from './utils';
+
+logger.addTarget('console').withFormatter(palin);
 
 const {Schema} = mongoose;
 const UserSchema = new Schema({
@@ -44,6 +48,8 @@ UserSchema.methods.setDefaultDevice = function(_id) {
 
 UserSchema.methods.subscribeToPush = function(data) {
     const {push} = data;
+
+    logger.info(data);
 
     return this.update({
         $set: {push}
