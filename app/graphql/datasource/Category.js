@@ -23,8 +23,14 @@ export default class CategoryAPI extends MongooseAPI {
         };
 
         const categories = await super.collect(params);
+        const sortFn = (prev, next) => {
+            const {name: prevName} = prev;
+            const {name: nextName} = next;
 
-        return categories.map(category => {
+            return prevName < nextName ? -1 : prevName > nextName ? 1 : 0;
+        };
+
+        return categories.sort(sortFn).map(category => {
             const owners = category.owners.map(owner => owner.toString());
 
             category.isOwner = owners.includes(user.toString());
