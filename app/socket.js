@@ -10,6 +10,7 @@ export const init = server => {
     instance.sockets.on('connection', socket => {
         socket.on('joinroom', room => {
             logger.info('room', room);
+            logger.into('IP', socket.request.socket.remoteAddress;)
             socket.join(room);
         });
     });

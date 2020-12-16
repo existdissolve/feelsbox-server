@@ -49,6 +49,7 @@ const subscribeToPush = (root, params, context) => {
 export const resolvers = {
     Mutation: {
         addUser,
-        setDefaultDevice
+        setDefaultDevice,
+        subscribeToPush
     }
 };

@@ -15,11 +15,7 @@ export default class UserAPI extends MongooseAPI {
         const user = await this.Model.findOne({email});
 
         if (user) {
-            logger.info(`Found user for email: ${email}`);
-
             try {
-                logger.info(`Trying to create session for ${email}`);
-
                 const {user: authenticatedUser} = await this.context.authenticate("graphql-local", {email});
 
                 await this.context.login(authenticatedUser);
@@ -27,8 +23,6 @@ export default class UserAPI extends MongooseAPI {
                 logger.error(ex);
             }
         }
-
-        logger.info(`Was user logged in? ${!!user}`);
 
         return !!user;
     }
