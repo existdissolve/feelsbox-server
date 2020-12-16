@@ -92,7 +92,6 @@ const initializePassport = app => {
     });
 
     passport.deserializeUser(function(obj, cb) {
-        logger.info('deserialize user', obj);
         cb(null, obj);
     });
 
