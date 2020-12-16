@@ -42,7 +42,9 @@ UserSchema.methods.setDefaultDevice = function(_id) {
     return this.update(payload);
 };
 
-UserSchema.methods.subscribeToPush = function(push) {
+UserSchema.methods.subscribeToPush = function(opts) {
+    const {push} = data;
+
     return this.update({
         $set: {push}
     });
