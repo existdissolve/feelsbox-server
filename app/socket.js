@@ -8,10 +8,10 @@ logger.addTarget('console').withFormatter(palin);
 export const init = server => {
     instance = socketio(server);
     instance.sockets.on('connection', socket => {
-        socket.on('joinroom', room => {
+        socket.on('joinroom', (room, ip) => {
             logger.info('room', room);
             socket.join(room);
-            logger.info('IP', socket.request.socket.remoteAddress);
+            logger.info('IP', ip);
         });
     });
 };
