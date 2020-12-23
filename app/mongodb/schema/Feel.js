@@ -114,7 +114,7 @@ FeelSchema.methods.toImage = async function() {
     const fileName = `${uid}.gif`;
     const dir = `${process.cwd()}/public_images`;
 
-    await fs.ensureDir(directory);
+    await fs.ensureDir(dir);
 
     encoder.createReadStream().pipe(
         fs.createWriteStream(`${dir}/${fileName}`)
