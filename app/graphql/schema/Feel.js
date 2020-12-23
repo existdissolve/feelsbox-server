@@ -86,6 +86,9 @@ export const typeDefs = gql`
 
     input SendFeelInput {
         devices: [ID]
+        isNotification: Boolean
+        notification: String
+        users: [ID]
     }
 
     extend type Mutation {

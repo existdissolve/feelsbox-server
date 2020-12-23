@@ -4,6 +4,7 @@ export const typeDefs = gql`
     type User @mongoose(model: "User") {
         _id: ID
         email: String
+        name: String
     }
 
     input UserInput {
@@ -21,6 +22,10 @@ export const typeDefs = gql`
         keys: UserPushKeysInput!
     }
 
+    extend type Query {
+        pushFriends: [User]
+    }
+
     extend type Mutation {
         addUser(data: UserInput!): User
         setDefaultDevice(_id: ID!): Null
@@ -32,6 +37,12 @@ const addUser = (root, params, context) => {
     const {dataSources} = context;
 
     return dataSources.userAPI.add(params);
+};
+
+const pushFriends = (root, params, context) => {
+    const {dataSources} = context;
+
+    return dataSources.userAPI.getPushFriends(params);
 };
 
 const setDefaultDevice = (root, params, context) => {
@@ -51,5 +62,8 @@ export const resolvers = {
         addUser,
         setDefaultDevice,
         subscribeToPush
+    },
+    Query: {
+        pushFriends
     }
 };

@@ -12,6 +12,10 @@ const UserSchema = new Schema({
         type: String,
         unique: true
     },
+    friends: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     jointAccounts: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
@@ -35,6 +39,16 @@ const UserSchema = new Schema({
         ref: 'Feel'
     }]
 }, defaultSchemaOptions);
+
+UserSchema.methods.getPushFriends = function() {
+    const User = mongoose.model('User');
+    const friends = this.get('friends');
+
+    return User.find({
+        _id: {$in: friends},
+        'push.endpoint': {$exists: true}
+    });
+};
 
 UserSchema.methods.setDefaultDevice = function(_id) {
     const payload = {defaultDevice: _id};

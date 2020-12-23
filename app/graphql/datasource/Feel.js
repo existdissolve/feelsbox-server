@@ -135,42 +135,24 @@ export default class FeelAPI extends MongooseAPI {
 
     async send(params) {
         const {_id, data = {}} = params;
-        const {devices = [], users = ['5e7fc4eeed6ac73e8f6e01cf']} = data;
+        const {devices = [], isNotification = false, notification, users = []} = data;
         const user = this.getUser();
         const feel = await this.get(_id);
-        const deviceIds = cloneDeep(devices);
 
         if (feel) {
-            const deviceAPI = this.getApi('device');
-            const historyAPI = this.getApi('history');
-            const rooms = [];
             const userInstance = await this.getUserInstance();
 
-            if (!devices.length) {
-                const defaultDevice = userInstance.get('defaultDevice');
-                const device = await deviceAPI.get(defaultDevice);
-                const code = device.get('code');
-
-                deviceIds.push(defaultDevice);
-                rooms.push(code);
-            } else {
-                const codes = await deviceAPI.getDeviceCodes(data);
-
-                rooms.push(...codes);
-            }
-
-            rooms.forEach(room => {
-                socket().to(room).emit('emote', {feel: feel.toObject()});
-            });
-
-            if (users.length) {
+            if (isNotification && users.length) {
+                const userIds = cloneDeep(users);
                 const userAPI = this.getApi('user');
-                const pushUsers = await userAPI.collect({
-                    query: {
-                        _id: {$in: users}
-                    }
-                });
+                const friends = userInstance.get('friends');
 
+                if (!friends.length) {
+                    return;
+                }
+
+                const friendInstances = await userAPI.getPushFriends();
+                const pushUsers = friendInstances.filter(friend => userIds.includes(friend._id.toString()));
                 const pushes = pushUsers.reduce((pushes, user) => {
                     const {push} = user;
 
@@ -188,6 +170,7 @@ export default class FeelAPI extends MongooseAPI {
 
                     const image = await feel.toImage();
                     const payload = {
+                        body: notification,
                         title: `${userInstance.name || userInstance.email} sent you a feel!`,
                         image
                     };
@@ -201,20 +184,43 @@ export default class FeelAPI extends MongooseAPI {
                         }
                     }
                 }
-            }
+            } else {
+                const deviceIds = cloneDeep(devices);
+                const deviceAPI = this.getApi('device');
+                const historyAPI = this.getApi('history');
+                const rooms = [];
 
-            const historyPayload = {
-                createdBy: user,
-                feelSnapshot: {
-                    ...pick(feel, ['duration', 'frames', 'name', 'repeat', 'reverse'])
+
+                if (!devices.length) {
+                    const defaultDevice = userInstance.get('defaultDevice');
+                    const device = await deviceAPI.get(defaultDevice);
+                    const code = device.get('code');
+
+                    deviceIds.push(defaultDevice);
+                    rooms.push(code);
+                } else {
+                    const codes = await deviceAPI.getDeviceCodes(data);
+
+                    rooms.push(...codes);
                 }
-            };
 
-            for (const deviceId of deviceIds) {
-                await historyAPI.add({
-                    ...historyPayload,
-                    device: deviceId
+                rooms.forEach(room => {
+                    socket().to(room).emit('emote', {feel: feel.toObject()});
                 });
+
+                const historyPayload = {
+                    createdBy: user,
+                    feelSnapshot: {
+                        ...pick(feel, ['duration', 'frames', 'name', 'repeat', 'reverse'])
+                    }
+                };
+
+                for (const deviceId of deviceIds) {
+                    await historyAPI.add({
+                        ...historyPayload,
+                        device: deviceId
+                    });
+                }
             }
         }
 

@@ -27,6 +27,16 @@ export default class UserAPI extends MongooseAPI {
         return !!user;
     }
 
+    async getPushFriends(params) {
+        const userInstance = await this.getUserInstance();
+
+        if (!userInstance) {
+            return;
+        }
+
+        return userInstance.getPushFriends();
+    }
+
     async setDefaultDevice(params) {
         const {_id} = params;
         const userInstance = await this.getUserInstance();
