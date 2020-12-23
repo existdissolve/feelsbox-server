@@ -112,9 +112,12 @@ FeelSchema.methods.toImage = async function() {
     const ctx = canvas.getContext('2d');
     const encoder = new GifEncoder(160, 160);
     const fileName = `${uid}.gif`;
+    const dir = `${process.cwd()}/public_images`;
+
+    await fs.ensureDir(directory);
 
     encoder.createReadStream().pipe(
-        fs.createWriteStream(`${process.cwd()}/public_images/${fileName}`)
+        fs.createWriteStream(`${dir}/${fileName}`)
     );
     encoder.start();
     encoder.setRepeat(repeat);
