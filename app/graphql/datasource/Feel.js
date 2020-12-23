@@ -3,6 +3,7 @@ import logger from 'bristol';
 import palin from 'palin';
 import MongooseAPI from '-/graphql/datasource/Mongoose';
 import socket from '-/socket';
+import webpush from 'web-push';
 
 logger.addTarget('console').withFormatter(palin);
 
@@ -134,7 +135,7 @@ export default class FeelAPI extends MongooseAPI {
 
     async send(params) {
         const {_id, data = {}} = params;
-        const {devices = []} = data;
+        const {devices = [], users = ['5e7fc4eeed6ac73e8f6e01cf']} = data;
         const user = this.getUser();
         const feel = await this.get(_id);
         const deviceIds = cloneDeep(devices);
@@ -143,9 +144,9 @@ export default class FeelAPI extends MongooseAPI {
             const deviceAPI = this.getApi('device');
             const historyAPI = this.getApi('history');
             const rooms = [];
+            const userInstance = await this.getUserInstance();
 
             if (!devices.length) {
-                const userInstance = await this.getUserInstance();
                 const defaultDevice = userInstance.get('defaultDevice');
                 const device = await deviceAPI.get(defaultDevice);
                 const code = device.get('code');
@@ -159,9 +160,47 @@ export default class FeelAPI extends MongooseAPI {
             }
 
             rooms.forEach(room => {
-                logger.info('pushing to room', room)
                 socket().to(room).emit('emote', {feel: feel.toObject()});
             });
+
+            if (users.length) {
+                const userAPI = this.getApi('user');
+                const pushUsers = await userAPI.collect({
+                    query: {
+                        _id: {$in: users}
+                    }
+                });
+
+                const pushes = pushUsers.reduce((pushes, user) => {
+                    const {push} = user;
+
+                    if (push) {
+                        pushes.push(push);
+                    }
+
+                    return pushes;
+                }, []);
+
+                if (pushes.length) {
+                    const {VAPID_SECRET: privateKey, VAPID_PUBLIC_KEY: publicKey} = process.env;
+
+                    webpush.setVapidDetails('mailto:existdissolve@gmail.com', publicKey, privateKey);
+
+                    const image = await feel.toImage();
+                    const payload = {
+                        title: `${userInstance.name} sent you a feel!`,
+                        image: `https://feelsbox-server-v2.herokuapp.com/public_images/${image}`
+                    };
+
+                    for (const push of pushes) {
+                        try {
+                            await webpush.sendNotification(push, JSON.stringify(payload));
+                        } catch (ex) {
+                            logger.error('ERROR in webpush', ex);
+                        }
+                    }
+                }
+            }
 
             const historyPayload = {
                 createdBy: user,

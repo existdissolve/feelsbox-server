@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
 import {pick} from 'lodash';
+import {createCanvas} from 'canvas-prebuilt';
+import fs from 'fs-extra';
+import {v4 as uuidv4} from 'uuid';
+import GifEncoder from 'gifencoder';
 
 import {defaultSchemaOptions} from './utils';
 
@@ -96,6 +100,51 @@ FeelSchema.methods.toggleSubscription = function(subscribe) {
             }
         }
     })
+};
+
+FeelSchema.methods.toImage = async function() {
+    const frames = this.get('frames');
+    const duration = this.get('duration');
+    const repeat = this.get('repeat') ? 0 : -1;
+    const images = [];
+    const uid = uuidv4();
+    const canvas = createCanvas(160, 160);
+    const ctx = canvas.getContext('2d');
+    const encoder = new GifEncoder(160, 160);
+    const fileName = `${uid}.gif`;
+
+    encoder.createReadStream().pipe(
+        fs.createWriteStream(`${process.cwd()}/public_images/${fileName}`)
+    );
+    encoder.start();
+    encoder.setRepeat(repeat);
+    encoder.setDelay(duration);
+
+    for (const frame of frames) {
+        const squareSize = 20;
+        const {pixels = []} = frame;
+
+        let position = 0;
+
+        for (let i = 0; i < 8; i++) {
+            for (let x = 0; x < 8; x++) {
+                const xOffset = x * squareSize;
+                const yOffset = i * squareSize;
+                const pixel = pixels.find(px => px.position === position) || {};
+                const {color = '000000'} = pixel;
+
+                ctx.fillStyle = `#${color}`;
+                ctx.fillRect(xOffset, yOffset, squareSize, squareSize);
+
+                position++;
+            }
+        }
+        encoder.addFrame(ctx);
+    }
+
+    encoder.finish();
+
+    return fileName;
 };
 
 FeelSchema.statics.cloneFromHistory = async function(history, opts = {}) {
