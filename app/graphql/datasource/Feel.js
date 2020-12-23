@@ -195,9 +195,7 @@ export default class FeelAPI extends MongooseAPI {
 
                     for (const push of pushes) {
                         try {
-                            const {endpoint} = push;
-
-                            await webpush.sendNotification(endpoint, JSON.stringify(payload));
+                            await webpush.sendNotification(push, JSON.stringify(payload));
                         } catch (ex) {
                             logger.error('ERROR in webpush', ex.toString());
                         }
