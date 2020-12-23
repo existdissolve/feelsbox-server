@@ -29,7 +29,7 @@
     "apollo-datasource": "^0.7.0",
     "apollo-server-express": "^2.11.0",
     "bristol": "^0.4.0",
-    "canvas-prebuilt": "^2.0.0-alpha.14",
+    "canvas": "^2.6.1",
     "connect-mongo": "^3.2.0",
     "cors": "^2.8.5",
     "crypto-random-string": "^3.2.0",

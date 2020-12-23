@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import {pick} from 'lodash';
-import {createCanvas} from 'canvas-prebuilt';
+import {createCanvas} from 'canvas';
 import fs from 'fs-extra';
 import {v4 as uuidv4} from 'uuid';
 import GifEncoder from 'gifencoder';
