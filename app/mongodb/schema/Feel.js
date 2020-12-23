@@ -3,7 +3,7 @@ import {pick} from 'lodash';
 import {createCanvas} from 'canvas';
 import fs from 'fs-extra';
 import {v4 as uuidv4} from 'uuid';
-import GifEncoder from 'gifencoder';
+import aws from 'aws-sdk';
 
 import {defaultSchemaOptions} from './utils';
 
@@ -103,49 +103,56 @@ FeelSchema.methods.toggleSubscription = function(subscribe) {
 };
 
 FeelSchema.methods.toImage = async function() {
+    const {AWS_SECRET: secretAccessKey, AWS_ACCESS_ID: accessKeyId} = process.env;
     const frames = this.get('frames');
     const duration = this.get('duration');
     const repeat = this.get('repeat') ? 0 : -1;
     const images = [];
+    const s3 = new aws.S3({
+        accessKeyId,
+        secretAccessKey
+    });
     const uid = uuidv4();
-    const canvas = createCanvas(160, 160);
+    const canvas = createCanvas(160, 160, 'png');
     const ctx = canvas.getContext('2d');
-    const encoder = new GifEncoder(160, 160);
-    const fileName = `${uid}.gif`;
-    const dir = `${process.cwd()}/public_images`;
+    // TODO: Get specified thumb
+    const [frame] = frames;
 
-    await fs.ensureDir(dir);
+    const squareSize = 20;
+    const {pixels = []} = frame;
 
-    encoder.createReadStream().pipe(
-        fs.createWriteStream(`${dir}/${fileName}`)
-    );
-    encoder.start();
-    encoder.setRepeat(repeat);
-    encoder.setDelay(duration);
+    let position = 0;
 
-    for (const frame of frames) {
-        const squareSize = 20;
-        const {pixels = []} = frame;
+    for (let i = 0; i < 8; i++) {
+        for (let x = 0; x < 8; x++) {
+            const xOffset = x * squareSize;
+            const yOffset = i * squareSize;
+            const pixel = pixels.find(px => px.position === position) || {};
+            const {color = '000000'} = pixel;
 
-        let position = 0;
+            ctx.fillStyle = `#${color}`;
+            ctx.fillRect(xOffset, yOffset, squareSize, squareSize);
 
-        for (let i = 0; i < 8; i++) {
-            for (let x = 0; x < 8; x++) {
-                const xOffset = x * squareSize;
-                const yOffset = i * squareSize;
-                const pixel = pixels.find(px => px.position === position) || {};
-                const {color = '000000'} = pixel;
-
-                ctx.fillStyle = `#${color}`;
-                ctx.fillRect(xOffset, yOffset, squareSize, squareSize);
-
-                position++;
-            }
+            position++;
         }
-        encoder.addFrame(ctx);
     }
 
-    encoder.finish();
+    const fileName = await new Promise((resolve, reject) => {
+        return s3.upload({
+            Bucket: 'feelsbox-push',
+            Key: `${uid}.png`,
+            Body: canvas.toBuffer(),
+            ContentEncoding: 'base64',
+            ContentType: 'image/png',
+            ACL:'public-read'
+        }, (err, data) => {
+            if (err) {
+                throw err;
+            } else {
+                resolve(data.Location)
+            }
+        })
+    });
 
     return fileName;
 };

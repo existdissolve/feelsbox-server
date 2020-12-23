@@ -189,7 +189,7 @@ export default class FeelAPI extends MongooseAPI {
                     const image = await feel.toImage();
                     const payload = {
                         title: `${userInstance.name || userInstance.email} sent you a feel!`,
-                        image: 'https://feelsbox-push.s3.amazonaws.com/eb16a655-3e5a-4c94-ba22-6d51964e9acc.gif'//`https://feelsbox-server-v2.herokuapp.com/public_images/${image}`
+                        image
                     };
 
                     for (const push of pushes) {
