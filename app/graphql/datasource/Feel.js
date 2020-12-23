@@ -162,7 +162,7 @@ export default class FeelAPI extends MongooseAPI {
             rooms.forEach(room => {
                 socket().to(room).emit('emote', {feel: feel.toObject()});
             });
-
+            /*
             if (users.length) {
                 const userAPI = this.getApi('user');
                 const pushUsers = await userAPI.collect({
@@ -202,6 +202,7 @@ export default class FeelAPI extends MongooseAPI {
                     }
                 }
             }
+            */
 
             const historyPayload = {
                 createdBy: user,
