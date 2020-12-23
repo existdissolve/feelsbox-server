@@ -197,7 +197,7 @@ export default class FeelAPI extends MongooseAPI {
                         try {
                             await webpush.sendNotification(push, JSON.stringify(payload));
                         } catch (ex) {
-                            logger.error('ERROR in webpush', ex);
+                            logger.error('ERROR in webpush', ex.toString());
                         }
                     }
                 }
