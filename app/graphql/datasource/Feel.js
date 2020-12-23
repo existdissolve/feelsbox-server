@@ -187,10 +187,10 @@ export default class FeelAPI extends MongooseAPI {
                     webpush.setVapidDetails('mailto:existdissolve@gmail.com', publicKey, privateKey);
 
                     const image = await feel.toImage();
+                    console.log(image)
                     const payload = {
-                        title: `${userInstance.name} sent you a feel!`,
-                        body: 'test'
-                        //image: `https://feelsbox-server-v2.herokuapp.com/public_images/${image}`
+                        title: `${userInstance.name || userInstance.email} sent you a feel!`,
+                        image: `https://feelsbox-server-v2.herokuapp.com/public_images/${image}`
                     };
 
                     for (const push of pushes) {
