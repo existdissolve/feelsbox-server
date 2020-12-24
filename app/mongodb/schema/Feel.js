@@ -115,8 +115,7 @@ FeelSchema.methods.toImage = async function() {
     const uid = uuidv4();
     const canvas = createCanvas(160, 160, 'png');
     const ctx = canvas.getContext('2d');
-    // TODO: Get specified thumb
-    const [frame] = frames;
+    const frame = frames.find(frame => frame.isThumb) || frames[0];
 
     const squareSize = 20;
     const {pixels = []} = frame;
