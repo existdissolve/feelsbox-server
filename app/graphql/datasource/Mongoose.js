@@ -106,8 +106,17 @@ export default class MongooseAPI extends BaseAPI {
     }
 
     collect(params) {
-        const {query = {}, select} = params;
+        const {limit, query = {}, select, sort} = params;
+        const api = this.Model.find(query, select);
 
-        return this.Model.find(query, select);
+        if (sort) {
+            api.sort(sort);
+        }
+
+        if (limit) {
+            api.limit(limit);
+        }
+
+        return api;
     }
 }

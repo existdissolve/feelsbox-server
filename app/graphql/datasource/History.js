@@ -27,6 +27,10 @@ export default class HistoryAPI extends MongooseAPI {
         params.query = {
             device: deviceId
         };
+        params.sort = {
+            createdAt: -1
+        };
+        params.limit = 50
 
         return super.collect(params);
     }
