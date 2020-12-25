@@ -53,7 +53,7 @@ const mountMiddleware = app => {
     const domain = env === 'production' ? 'feelsbox-client-v2.herokuapp.com' : 'feelsbox.local';
 
     app.use(cors());
-    app.use(bodyParser.json());
+    app.use(bodyParser.json({limit: '50mb'}));
     app.use(expressSession({
         cookie: {
             domain,
