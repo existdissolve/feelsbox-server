@@ -60,8 +60,6 @@ const categories = async(root, params, context) => {
 const myCategories = async(root, params, context) => {
     const {dataSources} = context;
 
-    params.isMine = true;
-
     return dataSources.categoryAPI.collect(params);
 };
 
