@@ -23,6 +23,7 @@ export const typeDefs = gql`
         frames: [FeelFrame]
         isOwner: Boolean
         isSubscribed: Boolean
+        isSubscriptionOwner: Boolean
         name: String
         private: Boolean
         repeat: Boolean

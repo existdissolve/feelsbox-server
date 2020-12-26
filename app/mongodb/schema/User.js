@@ -50,6 +50,27 @@ UserSchema.methods.getPushFriends = function() {
     });
 };
 
+UserSchema.methods.getSubscriptions = async function() {
+    const mySubscriptions = (this.get('subscriptions') || []).slice();
+    const jointAccounts = this.get('jointAccounts') || [];
+
+    if (jointAccounts.length) {
+        const User = mongoose.model('User');
+        const coOwners = await User.find({_id: {$in: jointAccounts}});
+        const coSubscriptions = coOwners.reduce((subscriptions, user) => {
+            const theirSubscriptions = user.get('subscriptions') || [];
+
+            subscriptions.push(...theirSubscriptions);
+
+            return subscriptions;
+        }, []);
+
+        mySubscriptions.push(...coSubscriptions);
+    }
+
+    return mySubscriptions;
+}
+
 UserSchema.methods.setDefaultDevice = function(_id) {
     const payload = {defaultDevice: _id};
 

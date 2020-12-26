@@ -17,7 +17,8 @@ export default class FeelAPI extends MongooseAPI {
         const {criteria = {}} = params;
         const {searchType = 'OWNER', sortType, text} = criteria;
         const userInstance = await this.getUserInstance();
-        const subscriptions = userInstance.get('subscriptions');
+        const subscriptions = await userInstance.getSubscriptions();
+        const mySubscriptions = userInstance.get('subscriptions') || [];
 
         params.query = {
             active: true,
@@ -56,6 +57,7 @@ export default class FeelAPI extends MongooseAPI {
 
             frame.pixels = frame.pixels.filter(pixel => pixel.color && pixel.position != null);
             feel.isOwner = allOwners.includes(user.toString());
+            feel.isSubscriptionOwner = mySubscriptions.some(sub => sub.toString() === _id.toString());
             feel.isSubscribed = subscriptions.some(sub => sub.toString() === _id.toString());
             feel.frames = [frame];
 
@@ -241,6 +243,7 @@ export default class FeelAPI extends MongooseAPI {
         }
 
         feel.isSubscribed = true;
+        feel.isSubscriptionOwner = true;
 
         return feel;
     }
@@ -279,6 +282,7 @@ export default class FeelAPI extends MongooseAPI {
         }
 
         feel.isSubscribed = false;
+        feel.isSubscriptionOwner = false;
 
         return feel;
     }
