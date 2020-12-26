@@ -10,7 +10,7 @@ const CategorySchema = new Schema({
     },
     global: {
         type: Boolean,
-        default: false
+        default: true
     },
     name: String,
     owner: {
