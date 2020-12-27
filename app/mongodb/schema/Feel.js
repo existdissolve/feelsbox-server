@@ -182,10 +182,12 @@ FeelSchema.statics.copy = async function(feel, opts = {}) {
     const userInstance = await User.findById(user);
     const {jointAccounts = []} = userInstance;
 
+    jointAccounts.push(user);
+
     payload.createdBy = user;
     payload.private = true;
     payload.owner = user;
-    payload.owners = jointAccounts.push(user);
+    payload.owners = jointAccounts;
     payload.categories = [BLANK_CATEGORY];
 
     return this.create(payload);
