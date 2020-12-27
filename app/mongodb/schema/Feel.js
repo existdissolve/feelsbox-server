@@ -179,7 +179,7 @@ FeelSchema.statics.copy = async function(feel, opts = {}) {
     const {user} = opts;
     const payload = pick(feel, ['active', 'duration', 'frames', 'name', 'repeat', 'reverse']);
     const User = mongoose.model('User');
-    const userInstance = await User.get(user);
+    const userInstance = await User.findById(user);
     const {jointAccounts = []} = userInstance;
 
     payload.createdBy = user;
