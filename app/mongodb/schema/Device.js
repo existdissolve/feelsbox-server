@@ -23,6 +23,12 @@ const DeviceSchema = new Schema({
         expiration: Date
     }],
     activation: Date,
+    capabilities: {
+        messages: {
+            type: Boolean,
+            default: false
+        }
+    },
     code: {
         type: String,
         unique: true

@@ -135,6 +135,36 @@ export default class FeelAPI extends MongooseAPI {
         return;
     }
 
+    async sendMessage(params) {
+        const {data = {}} = params;
+        const {devices = [], message} = data;
+        const user = this.getUser();
+        const deviceIds = cloneDeep(devices);
+
+        const deviceAPI = this.getApi('device');
+        const rooms = [];
+
+        if (!devices.length) {
+            const userInstance = await this.getUserInstance();
+            const defaultDevice = userInstance.get('defaultDevice');
+            const device = await deviceAPI.get(defaultDevice);
+            const code = device.get('code');
+
+            deviceIds.push(defaultDevice);
+            rooms.push(code);
+        } else {
+            const codes = await deviceAPI.getDeviceCodes(data);
+
+            rooms.push(...codes);
+        }
+
+        rooms.forEach(room => {
+            socket().to(room).emit('words', {words: message});
+        });
+
+        return;
+    }
+
     async send(params) {
         const {_id, data = {}} = params;
         const {devices = [], isNotification = false, notification, users = []} = data;

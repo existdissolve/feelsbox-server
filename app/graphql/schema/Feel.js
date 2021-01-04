@@ -78,6 +78,11 @@ export const typeDefs = gql`
         duration: Int
     }
 
+    input FeelMessageInput {
+        devices: [ID]
+        message: String
+    }
+
     input TestFeelInput {
         duration: Int
         frames: [FeelFrameInput]
@@ -101,6 +106,7 @@ export const typeDefs = gql`
         subscribe(_id: ID!): Feel
         sendCarousel(feels: [ID]!, data: FeelCarouselInput): Null
         sendFeel(_id: ID!, data: SendFeelInput): Null
+        sendMessage(data: FeelMessageInput): Null
         testFeel(feel: TestFeelInput!): Null
         unsubscribe(_id: ID!): Feel
     }
@@ -179,6 +185,12 @@ const sendFeel = async(root, params, context) => {
     return dataSources.feelAPI.send(params);
 };
 
+const sendMessage = async(root, params, context) => {
+    const {dataSources} = context;
+
+    return dataSources.feelAPI.sendMessage(params);
+};
+
 const testFeel = async(root, params, context) => {
     const {dataSources} = context;
 
@@ -201,6 +213,7 @@ export const resolvers = {
         subscribe,
         sendCarousel,
         sendFeel,
+        sendMessage,
         testFeel,
         unsubscribe
     },

@@ -10,12 +10,17 @@ export const typeDefs = gql`
         _id: ID
         access: [DeviceAccess]
         activation: Date
+        capabilities: DeviceCapabilities
         code: String
         isDefault: Boolean
         isOwner: Boolean
         name: String
         owner: User
         owners: [User]
+    }
+
+    type DeviceCapabilities {
+        messages: Boolean
     }
 
     input DeviceInput {
