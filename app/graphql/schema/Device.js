@@ -21,6 +21,7 @@ export const typeDefs = gql`
 
     type DeviceCapabilities {
         messages: Boolean
+        updates: Boolean
     }
 
     input DeviceInput {
@@ -42,6 +43,7 @@ export const typeDefs = gql`
         setDevicePermissions(_id: ID!, data: DeviceAccessInput!): Null @isOwner(type: "device")
         submitAccessCode(code: Int!): Null
         turnOff(_id: ID!): Null @isOwner(type: "device")
+        updateDevice(_id: ID!): Null @isOwner(type: "device")
         viewWeather: Null @isOwner(type: "device")
     }
 
@@ -111,6 +113,12 @@ const turnOff = async(root, params, context) => {
     return dataSources.deviceAPI.turnOff(params);
 };
 
+const updateDevice = async(root, params, context) => {
+    const {dataSources} = context;
+
+    return dataSources.deviceAPI.updateDevice();
+};
+
 const viewWeather = async(root, params, context) => {
     const {dataSources} = context;
 
@@ -127,6 +135,7 @@ export const resolvers = {
         setDevicePermissions,
         submitAccessCode,
         turnOff,
+        updateDevice,
         viewWeather
     },
     Query: {

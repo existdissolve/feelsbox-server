@@ -112,6 +112,12 @@ export default class DeviceAPI extends MongooseAPI {
         socket().to(room).emit('stop');
     };
 
+    async updateDevice() {
+        const room = await this.getDeviceCode();
+
+        socket().to(room).emit('update');
+    };
+
     async viewWeather(params) {
         const room = await this.getDeviceCode();
 

@@ -27,6 +27,10 @@ const DeviceSchema = new Schema({
         messages: {
             type: Boolean,
             default: false
+        },
+        updates: {
+            type: Boolean,
+            deafult: false
         }
     },
     code: {
