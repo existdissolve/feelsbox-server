@@ -38,18 +38,18 @@ export default class MongooseDirective extends SchemaDirectiveVisitor {
             // the basic idea is that every field except for _id needs to issue a query to get the data first so that it can
             // resolve the correct data
             field.resolve = async function(...args) {
-                const [_id, , , meta] = args;
-                // unfortunately, each of these resolves is in isolation, as there's not really a top-level "hook" that says
-                // "resolve all these fields". To get around this, we can do some introspection and figure out from the meta
-                // data passed to the resolver which fields are in the same query
-                const rootKey = get(meta, 'path.prev.key');
-                const baseSelectionSet = get(meta, 'operation.selectionSet', {});
-                const {selections = []} = findSelectionSet(rootKey, cloneDeep(baseSelectionSet));
-                const fieldNames = selections.map(selection => get(selection, 'name.value'));
                 // not _id? need to make sure we resolve data
                 if (fieldName !== '_id') {
+                    const [_id, , , meta] = args;
                     // only continue if we have a valid object id
                     if (isValidObjectId(_id)) {
+                        // unfortunately, each of these resolves is in isolation, as there's not really a top-level "hook" that says
+                        // "resolve all these fields". To get around this, we can do some introspection and figure out from the meta
+                        // data passed to the resolver which fields are in the same query
+                        const rootKey = get(meta, 'path.prev.key');
+                        const baseSelectionSet = get(meta, 'operation.selectionSet', {});
+                        const {selections = []} = findSelectionSet(rootKey, cloneDeep(baseSelectionSet));
+                        const fieldNames = selections.map(selection => get(selection, 'name.value'));
                         // to prevent a query for each field, we have a quasi-cache operating here
                         // the _id will be used as the key and will store the promise of the requested query
                         // this will work, because each of the resolvers is async and can await the resolution of the promise
