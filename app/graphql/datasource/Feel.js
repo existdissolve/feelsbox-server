@@ -137,7 +137,7 @@ export default class FeelAPI extends MongooseAPI {
 
     async sendMessage(params) {
         const {data = {}} = params;
-        const {devices = [], message} = data;
+        const {devices = [], duration = 50, message} = data;
         const user = this.getUser();
         const deviceIds = cloneDeep(devices);
 
@@ -159,7 +159,10 @@ export default class FeelAPI extends MongooseAPI {
         }
 
         rooms.forEach(room => {
-            socket().to(room).emit('words', {words: message});
+            socket().to(room).emit('words', {
+                duration,
+                words: message
+            });
         });
 
         return;

@@ -80,6 +80,7 @@ export const typeDefs = gql`
 
     input FeelMessageInput {
         devices: [ID]
+        duration: Int
         message: String
     }
 
