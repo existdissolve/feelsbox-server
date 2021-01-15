@@ -180,6 +180,7 @@ export default class FeelAPI extends MongooseAPI {
             if (isNotification && users.length) {
                 const userIds = cloneDeep(users);
                 const userAPI = this.getApi('user');
+                const messageAPI = this.getApi('message');
                 const friends = userInstance.get('friends');
 
                 if (!friends.length) {
@@ -192,7 +193,7 @@ export default class FeelAPI extends MongooseAPI {
                     const {push} = user;
 
                     if (push) {
-                        pushes.push(push);
+                        pushes.push(user);
                     }
 
                     return pushes;
@@ -209,14 +210,28 @@ export default class FeelAPI extends MongooseAPI {
                         title: `${userInstance.name || userInstance.email} sent you a feel!`,
                         image
                     };
+                    const messagePayload = {
+                        createdBy: user,
+                        message: notification,
+                        feelSnapshot: {
+                            ...pick(feel, ['duration', 'frames', 'name', 'repeat', 'reverse'])
+                        }
+                    };
 
-                    for (const push of pushes) {
+                    for (const userObj of pushes) {
+                        const {push} = userObj;
+
                         try {
                             await webpush.sendNotification(push, JSON.stringify(payload));
                         } catch (ex) {
                             const {body, endpoint, headers, message, statusCode} = ex;
                             logger.error('ERROR in webpush', body, endpoint, headers, message, statusCode);
                         }
+
+                        await messageAPI.add({
+                            ...messagePayload,
+                            recipient: userObj._id
+                        });
                     }
                 }
             } else {

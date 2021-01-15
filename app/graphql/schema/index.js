@@ -10,6 +10,7 @@ const schemas = [
     './DeviceGroup',
     './Feel',
     './History',
+    './Message',
     '../scalar',
     './User'
 ];

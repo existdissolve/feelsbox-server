@@ -7,6 +7,7 @@ import DeviceSchema from '-/mongodb/schema/Device';
 import DeviceGroupSchema from '-/mongodb/schema/DeviceGroup';
 import FeelSchema from '-/mongodb/schema/Feel';
 import HistorySchema from '-/mongodb/schema/History';
+import MessageSchema from '-/mongodb/schema/Message';
 import UserSchema from '-/mongodb/schema/User';
 
 const initializeModels = () => {
@@ -15,6 +16,7 @@ const initializeModels = () => {
     mongoose.model('DeviceGroup', DeviceGroupSchema);
     mongoose.model('Feel', FeelSchema);
     mongoose.model('History', HistorySchema);
+    mongoose.model('Message', MessageSchema);
     mongoose.model('User', UserSchema);
 }
 
