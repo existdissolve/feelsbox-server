@@ -86,55 +86,6 @@ export default class FeelAPI extends MongooseAPI {
         return this.Model.copy(feel, {user});
     }
 
-    async sendCarousel(params) {
-        const {feels: _ids, data = {}} = params;
-        const {devices = [], duration} = data;
-        const user = this.getUser();
-        const feels = await super.collect({
-            query: {
-                _id: {$in: _ids}
-            }
-        });
-
-        const deviceIds = cloneDeep(devices);
-
-        if (feels.length) {
-            const deviceAPI = this.getApi('device');
-            const historyAPI = this.getApi('history');
-            const rooms = [];
-            const feel = {
-                duration,
-                frames: [],
-                repeat: true
-            };
-
-            feels.forEach(feelInstance => {
-                feel.frames.push(...feelInstance.frames);
-            })
-
-            if (!devices.length) {
-                const userInstance = await this.getUserInstance();
-                const defaultDevice = userInstance.get('defaultDevice');
-                const device = await deviceAPI.get(defaultDevice);
-                const code = device.get('code');
-
-                deviceIds.push(defaultDevice);
-                rooms.push(code);
-            } else {
-                const codes = await deviceAPI.getDeviceCodes(data);
-
-                rooms.push(...codes);
-            }
-
-            rooms.forEach(room => {
-                logger.info('pushing to room', room)
-                socket().to(room).emit('emote', {feel});
-            });
-        }
-
-        return;
-    }
-
     async sendMessage(params) {
         const {data = {}} = params;
         const {devices = [], duration = 50, message} = data;

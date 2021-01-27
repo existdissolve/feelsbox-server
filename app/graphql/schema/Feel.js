@@ -105,7 +105,6 @@ export const typeDefs = gql`
         editFeel(_id: ID!, data: FeelInput!): Feel @isOwner(type: "feel")
         removeFeel(_id: ID!): Feel
         subscribe(_id: ID!): Feel
-        sendCarousel(feels: [ID]!, data: FeelCarouselInput): Null
         sendFeel(_id: ID!, data: SendFeelInput): Null
         sendMessage(data: FeelMessageInput): Null
         testFeel(feel: TestFeelInput!): Null
@@ -174,12 +173,6 @@ const subscribe = async(root, params, context) => {
     return dataSources.feelAPI.subscribe(params);
 };
 
-const sendCarousel = async(root, params, context) => {
-    const {dataSources} = context;
-
-    return dataSources.feelAPI.sendCarousel(params);
-};
-
 const sendFeel = async(root, params, context) => {
     const {dataSources} = context;
 
@@ -212,7 +205,6 @@ export const resolvers = {
         editFeel,
         removeFeel,
         subscribe,
-        sendCarousel,
         sendFeel,
         sendMessage,
         testFeel,
