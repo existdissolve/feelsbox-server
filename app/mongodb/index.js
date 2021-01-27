@@ -6,6 +6,7 @@ import CategorySchema from '-/mongodb/schema/Category';
 import DeviceSchema from '-/mongodb/schema/Device';
 import DeviceGroupSchema from '-/mongodb/schema/DeviceGroup';
 import FeelSchema from '-/mongodb/schema/Feel';
+import FeelGroupSchema from '-/mongodb/schema/FeelGroup';
 import HistorySchema from '-/mongodb/schema/History';
 import MessageSchema from '-/mongodb/schema/Message';
 import UserSchema from '-/mongodb/schema/User';
@@ -15,6 +16,7 @@ const initializeModels = () => {
     mongoose.model('Device', DeviceSchema);
     mongoose.model('DeviceGroup', DeviceGroupSchema);
     mongoose.model('Feel', FeelSchema);
+    mongoose.model('FeelGroup', FeelGroupSchema);
     mongoose.model('History', HistorySchema);
     mongoose.model('Message', MessageSchema);
     mongoose.model('User', UserSchema);

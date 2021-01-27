@@ -23,3 +23,9 @@ export const typeDefs = gql`
 `;
 
 export const resolvers = {};
+
+export const mapApi = (dataSource, method, root, params, context) => {
+    const {dataSources} = context;
+
+    return dataSources[dataSource][method](params);
+};
