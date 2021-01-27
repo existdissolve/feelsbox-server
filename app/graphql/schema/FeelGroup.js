@@ -1,7 +1,7 @@
 import {gql} from 'apollo-server-express';
 
 import socket from '-/socket';
-import {mapApi} from '-/graphql/schema/base';
+import {mapApi} from '-/graphql/schema/Base';
 
 export const typeDefs = gql`
     type FeelGroup @mongoose(model: "FeelGroup") {
