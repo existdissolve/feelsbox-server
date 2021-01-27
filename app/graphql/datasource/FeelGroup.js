@@ -29,7 +29,7 @@ export default class FeelGroupAPI extends MongooseAPI {
         const deviceIds = cloneDeep(devices);
         const feelGroup = await super.get(_id);
         const feelIds = feelGroup.get('feels');
-        const feels = await feelAPI.collect({
+        const feels = await feelAPI.simpleQuery({
             query: {
                 _id: {$in: feelIds}
             }

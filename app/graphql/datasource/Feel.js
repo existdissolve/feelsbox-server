@@ -12,6 +12,10 @@ export default class FeelAPI extends MongooseAPI {
         super('Feel');
     }
 
+    simpleQuery(params) {
+        return super.collect(params);
+    }
+
     async collect(params) {
         const user = this.getUser();
         const {criteria = {}} = params;
