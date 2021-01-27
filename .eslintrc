@@ -1,0 +1,64 @@
+{
+    "globals": {
+        "MyGlobal": true
+    },
+    "extends": [
+        "eslint:recommended"
+    ],
+    "parser": "babel-eslint",
+    "settings": {
+        "react": {
+            "version": "16.13.1"
+        }
+    },
+    "env": {
+        "node": true,
+        "mocha": true,
+        "es6": true
+    },
+    "plugins": [
+        "class-property"
+    ],
+    "rules": {
+        "quotes": [2, "single", {"avoidEscape": true}],
+        "no-case-declarations": 1,
+        "no-class-assign": 0,
+        "no-unused-vars": ["warn", {"ignoreRestSiblings": true}],
+        "react/display-name": 0,
+        "react/prop-types": 0,
+        "react/no-multi-comp": 0,
+        "react/react-in-jsx-scope": 0,
+        "semi": ["error", "always"],
+        "object-shorthand": ["error", "always"],
+        "comma-dangle": ["error", "never"],
+        "prefer-destructuring": ["error", {
+            "array": true,
+            "object": true
+        }],
+        "jsx-quotes": ["error", "prefer-double"],
+        "react/jsx-props-no-multi-spaces": "error",
+        "react/destructuring-assignment": ["error", "always"],
+        "react/no-typos": "error",
+        "react/no-unused-state": "error",
+        "react/jsx-tag-spacing": ["error", {
+            "closingSlash": "never",
+            "beforeSelfClosing": "always",
+            "afterOpening": "never",
+            "beforeClosing": "never"
+        }],
+        "react/jsx-equals-spacing": ["error", "never"],
+        "react/jsx-first-prop-new-line": "error",
+        "react/self-closing-comp": "error",
+        "react/require-render-return": "error",
+        "react/prefer-es6-class": ["error", "always"],
+        "react/jsx-no-undef": "error",
+        "react/jsx-no-duplicate-props": ["error", {
+            "ignoreCase": true
+        }],
+        "space-before-function-paren": ["error", "never"],
+        "indent": ["error", 4, {"SwitchCase": 1}],
+        "object-curly-spacing": ["warn", "never"],
+        "comma-spacing": "warn",
+        "class-property/class-property-semicolon": ["warn", "always"]
+    }
+}

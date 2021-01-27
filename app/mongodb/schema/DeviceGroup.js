@@ -16,8 +16,18 @@ const DeviceGroupSchema = new Schema({
     owner: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }
+    },
+    owners: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }]
 }, defaultSchemaOptions);
+
+DeviceGroupSchema.methods.delete = function() {
+    this.active = false;
+
+    return this.save();
+}
 
 DeviceGroupSchema.methods.addDevice = async function(deviceId) {
     const Device = mongoose.model('Device');
@@ -25,13 +35,6 @@ DeviceGroupSchema.methods.addDevice = async function(deviceId) {
 
     if (!device) {
         throw new Error(`Could not find device: ${deviceId}`);
-    }
-
-    const {owner: groupOwner} = this;
-    const {owner: deviceOwner} = device;
-
-    if (groupOwner.toString() !== deviceOwner.toString()) {
-        throw new Error('Device group owner must be the same as the device owner');
     }
 
     return this.update({

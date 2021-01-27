@@ -1,15 +1,18 @@
 import {gql} from 'apollo-server-express';
 
+import {mapApi} from '-/graphql/schema/Base';
+
 export const typeDefs = gql`
     type DeviceGroup @mongoose(model: "DeviceGroup") {
         _id: ID
         devices: [Device]
         name: String
-        owner: User
+        owners: [User]
     }
 
     input DeviceGroupInput {
         name: String!
+        devices: [ID]
     }
 
     extend type Mutation {
@@ -26,58 +29,18 @@ export const typeDefs = gql`
     }
 `;
 
-const addDeviceGroup = async(root, params, context) => {
-    const {dataSources} = context;
-
-    return dataSources.deviceGroupAPI.add(params);
-};
-
-const addDeviceToGroup = async(root, params, context) => {
-    const {dataSources} = context;
-
-    return dataSources.deviceGroupAPI.addDevice(params);
-};
-
-const editDeviceGroup = async(root, params, context) => {
-    const {dataSources} = context;
-
-    return dataSources.deviceGroupAPI.edit(params);
-};
-
-const removeDeviceGroup = async(root, params, context) => {
-    const {dataSources} = context;
-
-    return dataSources.deviceGroupAPI.delete(params);
-};
-
-const removeDeviceFromGroup = async(root, params, context) => {
-    const {dataSources} = context;
-
-    return dataSources.deviceGroupAPI.removeDevice(params);
-};
-
-const deviceGroup = async(root, params, context) => {
-    const {dataSources} = context;
-
-    return dataSources.deviceGroupAPI.get(params);
-};
-
-const deviceGroups = async(root, params, context) => {
-    const {dataSources} = context;
-
-    return dataSources.deviceGroupAPI.collect(params);
-};
+const defaultApi = 'deviceGroupAPI';
 
 export const resolvers = {
     Mutation: {
-        addDeviceGroup,
-        addDeviceToGroup,
-        editDeviceGroup,
-        removeDeviceGroup,
-        removeDeviceFromGroup
+        addDeviceGroup: mapApi.bind(null, defaultApi, 'add'),
+        addDeviceToGroup: mapApi.bind(null, defaultApi, 'addDevice'),
+        editDeviceGroup: mapApi.bind(null, defaultApi, 'edit'),
+        removeDeviceGroup: mapApi.bind(null, defaultApi, 'delete'),
+        removeDeviceFromGroup: mapApi.bind(null, defaultApi, 'removeDevice')
     },
     Query: {
-        deviceGroup,
-        deviceGroups
+        deviceGroup: mapApi.bind(null, defaultApi, 'get'),
+        deviceGroups: mapApi.bind(null, defaultApi, 'collect')
     }
 };
