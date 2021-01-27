@@ -43,9 +43,13 @@ export default class FeelGroupAPI extends MongooseAPI {
                 repeat: true
             };
 
-            feels.forEach(feelInstance => {
-                feel.frames.push(...feelInstance.frames);
-            })
+            feelIds.forEach(feelId => {
+                const feelInstance = feels.find(feel => feel._id.toString() === feelId);
+
+                if (feelInstance) {
+                    feel.frames.push(...feelInstance.frames);
+                }
+            });
 
             if (!devices.length) {
                 const userInstance = await this.getUserInstance();
