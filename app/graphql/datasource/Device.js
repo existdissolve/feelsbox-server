@@ -1,5 +1,6 @@
-import MongooseAPI from '-/graphql/datasource/Mongoose';
+import {uniq} from 'lodash';
 
+import MongooseAPI from '-/graphql/datasource/Mongoose';
 import socket from '-/socket';
 
 export default class DeviceAPI extends MongooseAPI {
@@ -56,10 +57,33 @@ export default class DeviceAPI extends MongooseAPI {
     }
 
     async getDeviceCodes(params) {
-        const {devices} = params;
+        const {devices = [], deviceGroups = []} = params;
         const instances = await this.Model.find({_id: {$in: devices}});
+        const codes = instances.map(device => device.code);
 
-        return instances.map(device => device.code);
+        if (deviceGroups.length) {
+            const deviceGroupAPI = this.getApi('deviceGroup');
+            const groups = await deviceGroupAPI.Model.find({
+                _id: {
+                    $in: deviceGroups
+                }
+            });
+            const deviceIds = groups.reduce((groupDevices, group) => {
+                const {devices = []} = group;
+                const ids = devices.map(id => id.toString());
+
+                groupDevices.push(...ids);
+
+                return groupDevices;
+            }, []);
+
+            const deviceInstances = await this.Model.find({_id: {$in: deviceIds}});
+            const extraCodes = deviceInstances.map(device => device.code);
+
+            codes.push(...extraCodes);
+        }
+
+        return uniq(codes);
     }
 
     async getDeviceCode(params) {

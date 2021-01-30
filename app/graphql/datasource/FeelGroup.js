@@ -25,8 +25,7 @@ export default class FeelGroupAPI extends MongooseAPI {
         const {_id, data = {}} = params;
         const feelAPI = this.getApi('feel');
         const deviceAPI = this.getApi('device');
-        const {devices = []} = data;
-        const deviceIds = cloneDeep(devices);
+        const {devices = [], deviceGroups = []} = data;
         const feelGroup = await super.get(_id);
         const feelIds = feelGroup.get('feels');
         const feels = await feelAPI.simpleQuery({
@@ -51,13 +50,12 @@ export default class FeelGroupAPI extends MongooseAPI {
                 }
             });
 
-            if (!devices.length) {
+            if (!devices.length && !deviceGroups.length) {
                 const userInstance = await this.getUserInstance();
                 const defaultDevice = userInstance.get('defaultDevice');
                 const device = await deviceAPI.get(defaultDevice);
                 const code = device.get('code');
 
-                deviceIds.push(defaultDevice);
                 rooms.push(code);
             } else {
                 const codes = await deviceAPI.getDeviceCodes(data);

@@ -19,6 +19,7 @@ export const typeDefs = gql`
 
     input FeelGroupSendInput {
         devices: [ID]
+        deviceGroups: [ID]
     }
 
     extend type Mutation {

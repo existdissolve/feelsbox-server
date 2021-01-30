@@ -80,6 +80,7 @@ export const typeDefs = gql`
 
     input FeelMessageInput {
         devices: [ID]
+        deviceGroups: [ID]
         duration: Int
         message: String
     }
@@ -93,6 +94,7 @@ export const typeDefs = gql`
 
     input SendFeelInput {
         devices: [ID]
+        deviceGroups: [ID]
         isNotification: Boolean
         notification: String
         users: [ID]

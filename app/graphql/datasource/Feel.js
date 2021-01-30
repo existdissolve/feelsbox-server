@@ -92,14 +92,14 @@ export default class FeelAPI extends MongooseAPI {
 
     async sendMessage(params) {
         const {data = {}} = params;
-        const {devices = [], duration = 50, message} = data;
+        const {devices = [], deviceGroups = [], duration = 50, message} = data;
         const user = this.getUser();
         const deviceIds = cloneDeep(devices);
 
         const deviceAPI = this.getApi('device');
         const rooms = [];
 
-        if (!devices.length) {
+        if (!devices.length && !deviceGroups.length) {
             const userInstance = await this.getUserInstance();
             const defaultDevice = userInstance.get('defaultDevice');
             const device = await deviceAPI.get(defaultDevice);
@@ -125,7 +125,7 @@ export default class FeelAPI extends MongooseAPI {
 
     async send(params) {
         const {_id, data = {}} = params;
-        const {devices = [], isNotification = false, notification, users = []} = data;
+        const {devices = [], deviceGroups = [], isNotification = false, notification, users = []} = data;
         const user = this.getUser();
         const feel = await this.get(_id);
 
@@ -196,7 +196,7 @@ export default class FeelAPI extends MongooseAPI {
                 const rooms = [];
 
 
-                if (!devices.length) {
+                if (!devices.length && !deviceGroups.length) {
                     const defaultDevice = userInstance.get('defaultDevice');
                     const device = await deviceAPI.get(defaultDevice);
                     const code = device.get('code');
