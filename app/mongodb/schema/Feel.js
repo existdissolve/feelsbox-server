@@ -201,7 +201,9 @@ FeelSchema.methods.stepsToFrames = function() {
         const {terminal} = step;
         const definition = {start: terminal, length: width};
 
-        return transpose(pixels, definition);
+        return {
+            pixels: transpose(pixels, definition)
+        };
     });
 };
 
