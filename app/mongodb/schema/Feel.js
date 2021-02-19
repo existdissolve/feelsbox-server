@@ -9,6 +9,25 @@ import {defaultSchemaOptions} from './utils';
 
 const BLANK_CATEGORY = '000000000000000000000000';
 const {Schema} = mongoose;
+const transpose = (pixels, definition = {}) => {
+    const {start = 0, length = 20} = definition;
+    const colCount = 8;
+    const range = [];
+
+    let startIdx = start;
+
+    for (let x = 0; x < colCount; x++) {
+        startIdx = startIdx + (x === 0 ? 0 : length);
+
+        for (let y = 0; y < colCount; y++) {
+            const {color} = pixels[startIdx + y];
+
+            range.push({color, position: (x * colCount) + y});
+        }
+    }
+
+    return range;
+};
 
 const FeelSchema = new Schema({
     active: {
@@ -61,6 +80,19 @@ const FeelSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],
+    panorama: {
+        height: Number,
+        pixels: [{
+            _id: false,
+            color: String,
+            position: Number
+        }],
+        steps: [{
+            _id: false,
+            terminal: Number
+        }],
+        width: Number
+    },
     private: {
         type: Boolean,
         default: true
@@ -154,6 +186,22 @@ FeelSchema.methods.toImage = async function() {
     });
 
     return fileName;
+};
+
+FeelSchema.methods.isPanorama = function() {
+    const pixels = this.get('panorama.pixels') || [];
+
+    return pixels.length;
+};
+
+FeelSchema.methods.stepsToFrames = function() {
+    const {height, pixels, steps, width} = this.get('panorama');
+    const frames = steps.map(step => {
+        const {terminal} = step;
+        const definition = {start: terminal, length: width};
+
+        return transpose(pixels, definition);
+    });
 };
 
 FeelSchema.statics.cloneFromHistory = async function(history, opts = {}) {

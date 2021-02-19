@@ -1,4 +1,5 @@
 import {gql} from 'apollo-server-express';
+import {get} from 'lodash';
 
 import socket from '-/socket';
 
@@ -15,6 +16,17 @@ export const typeDefs = gql`
         pixels: [FeelFramePixel]
     }
 
+    type FeelPanoramaStep {
+        terminal: Int
+    }
+
+    type FeelPanorama {
+        height: Int
+        pixels: [FeelFramePixel]
+        steps: [FeelPanoramaStep]
+        width: Int
+    }
+
     type Feel @mongoose(model: "Feel") {
         _id: ID
         active: Boolean
@@ -22,9 +34,11 @@ export const typeDefs = gql`
         duration: Int
         frames: [FeelFrame]
         isOwner: Boolean
+        isPanorama: Boolean
         isSubscribed: Boolean
         isSubscriptionOwner: Boolean
         name: String
+        panorama: FeelPanorama
         private: Boolean
         repeat: Boolean
         reverse: Boolean
@@ -57,6 +71,17 @@ export const typeDefs = gql`
         pixels: [FeelFramePixelInput]
     }
 
+    input FeelPanoramaStepInput {
+        terminal: Int
+    }
+
+    input FeelPanoramaInput {
+        height: Int
+        pixels: [FeelFramePixelInput]
+        steps: [FeelPanoramaStepInput]
+        width: Int
+    }
+
     input FeelSearchCriteriaInput {
         searchType: FeelSearchType
         sortType: FeelSortType
@@ -68,6 +93,7 @@ export const typeDefs = gql`
         duration: Int
         frames: [FeelFrameInput]
         name: String
+        panorama: FeelPanoramaInput
         private: Boolean
         repeat: Boolean
         reverse: Boolean
@@ -215,5 +241,12 @@ export const resolvers = {
     Query: {
         feel,
         feels
+    },
+    Feel: {
+        isPanorama: parent => {
+            const pixels = get(parent, 'panorama.pixels', []);
+
+            return pixels.length;
+        }
     }
 };

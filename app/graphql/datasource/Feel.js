@@ -1,4 +1,4 @@
-import {cloneDeep, pick} from 'lodash';
+import {cloneDeep, get, pick} from 'lodash';
 import logger from 'bristol';
 import palin from 'palin';
 import MongooseAPI from '-/graphql/datasource/Mongoose';
@@ -209,8 +209,14 @@ export default class FeelAPI extends MongooseAPI {
                     rooms.push(...codes);
                 }
 
+                const feelObj = feel.toObject();
+
+                if (feel.isPanorama()) {
+                    feelObj.frames = feel.stepsToFrames();
+                }
+
                 rooms.forEach(room => {
-                    socket().to(room).emit('emote', {feel: feel.toObject()});
+                    socket().to(room).emit('emote', {feel: feelObj});
                 });
 
                 const historyPayload = {
