@@ -209,7 +209,7 @@ export default class FeelAPI extends MongooseAPI {
                     rooms.push(...codes);
                 }
 
-                const feelObj = feel.toObject();
+                const feelObj = pick(feel.toObject(), ['duration', 'frames', 'repeat', 'reverse']);
 
                 if (feel.isPanorama()) {
                     feelObj.frames = feel.stepsToFrames();

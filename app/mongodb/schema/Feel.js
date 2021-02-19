@@ -196,7 +196,8 @@ FeelSchema.methods.isPanorama = function() {
 
 FeelSchema.methods.stepsToFrames = function() {
     const {height, pixels, steps, width} = this.get('panorama');
-    const frames = steps.map(step => {
+
+    return steps.map(step => {
         const {terminal} = step;
         const definition = {start: terminal, length: width};
 
