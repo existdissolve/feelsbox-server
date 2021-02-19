@@ -1,4 +1,4 @@
-import {cloneDeep, get, pick} from 'lodash';
+import {cloneDeep, get, omit, pick} from 'lodash';
 import logger from 'bristol';
 import palin from 'palin';
 import MongooseAPI from '-/graphql/datasource/Mongoose';
@@ -54,7 +54,8 @@ export default class FeelAPI extends MongooseAPI {
             feels = await super.collect(params);
         }
 
-        return feels.map(feel => {
+        return feels.map(feelInstance => {
+            const feel = omit(feelInstance, 'panorama');
             const {_id, owners = []} = feel;
             const allOwners = owners.map(owner => owner.toString());
             const frame = feel.frames.find(frame => frame.isThumb) || feel.frames[0];
