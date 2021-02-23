@@ -21,6 +21,7 @@ export const typeDefs = gql`
         editDeviceGroup(_id: ID!, data: DeviceGroupInput!): DeviceGroup @isOwner(type: "deviceGroup")
         removeDeviceGroup(_id: ID!): Null @isOwner(type: "deviceGroup")
         removeDeviceFromGroup(_id: ID!, deviceId: ID!): DeviceGroup @isOwner(type: "deviceGroup")
+        turnOffDeviceGroup(_id: ID!): Null @isOwner(type: "deviceGroup")
     }
 
     extend type Query {
@@ -37,7 +38,8 @@ export const resolvers = {
         addDeviceToGroup: mapApi.bind(null, defaultApi, 'addDevice'),
         editDeviceGroup: mapApi.bind(null, defaultApi, 'edit'),
         removeDeviceGroup: mapApi.bind(null, defaultApi, 'delete'),
-        removeDeviceFromGroup: mapApi.bind(null, defaultApi, 'removeDevice')
+        removeDeviceFromGroup: mapApi.bind(null, defaultApi, 'removeDevice'),
+        turnOffDeviceGroup: mapApi.bind(null, defaultApi, 'turnOff')
     },
     Query: {
         deviceGroup: mapApi.bind(null, defaultApi, 'get'),

@@ -1,4 +1,5 @@
 import MongooseAPI from '-/graphql/datasource/Mongoose';
+import socket from '-/socket';
 
 export default class DeviceGroupAPI extends MongooseAPI {
     constructor() {
@@ -39,4 +40,19 @@ export default class DeviceGroupAPI extends MongooseAPI {
 
         return this.get(_id, {clear: true});
     }
+
+    async turnOff(params) {
+        const {_id} = params;
+        const deviceGroup = await this.get(_id);
+        const deviceIds = deviceGroup.get('devices');
+        const deviceAPI = this.getApi('device');
+        const rooms = await deviceAPI.Model.distinct('code', {
+            _id: {$in: deviceIds}
+        });
+
+        for (const room of rooms) {
+            console.log(room)
+            socket().to(room).emit('stop');
+        }
+    };
 }
