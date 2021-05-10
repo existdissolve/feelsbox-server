@@ -211,15 +211,18 @@ FeelSchema.statics.cloneFromHistory = async function(history, opts = {}) {
     const {user} = opts;
     const {feelSnapshot} = history;
     const User = mongoose.model('User');
-    const userInstance = await User.get(user);
+    const userInstance = await User.findById(user);
     const {jointAccounts = []} = userInstance;
+    
+    jointAccounts.push(user);
+
     const payload = {
         ...feelSnapshot,
         active: true,
         categories: [BLANK_CATEGORY],
         createdBy: user,
         owner: user,
-        owners: jointAccounts.push(user),
+        owners: jointAccounts,
         private: true
     };
 
