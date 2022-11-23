@@ -9,6 +9,7 @@ import {defaultSchemaOptions} from './utils';
 
 const BLANK_CATEGORY = '000000000000000000000000';
 const {Schema} = mongoose;
+
 const transpose = (pixels, definition = {}) => {
     const {start = 0, length = 20} = definition;
     const colCount = 8;
