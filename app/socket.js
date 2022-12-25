@@ -6,14 +6,17 @@ let instance;
 logger.addTarget('console').withFormatter(palin);
 
 export const init = server => {
-    instance = socketio(server);
-    instance.sockets.on('connection', socket => {
+    const socketInstance = socketio(server);
+
+    socketInstance.on('connection', socket => {
         socket.on('joinroom', (room, ip, version) => {
             logger.info('room', room);
             socket.join(room);
             logger.info('IP/Version', ip, version);
         });
     });
+
+    instance = socketInstance;
 };
 
 export default () => {

@@ -1,11 +1,10 @@
 import mongoose from 'mongoose';
 import {pick} from 'lodash';
-import {createCanvas} from 'canvas';
-import fs from 'fs-extra';
 import {v4 as uuidv4} from 'uuid';
 import aws from 'aws-sdk';
 
 import {defaultSchemaOptions} from './utils';
+import {pixelsToImage} from '-/utils/image';
 
 const BLANK_CATEGORY = '000000000000000000000000';
 const {Schema} = mongoose;
@@ -138,42 +137,20 @@ FeelSchema.methods.toggleSubscription = function(subscribe) {
 FeelSchema.methods.toImage = async function() {
     const {AWS_SECRET: secretAccessKey, AWS_ACCESS_ID: accessKeyId} = process.env;
     const frames = this.get('frames');
-    const duration = this.get('duration');
-    const repeat = this.get('repeat') ? 0 : -1;
-    const images = [];
     const s3 = new aws.S3({
         accessKeyId,
         secretAccessKey
     });
     const uid = uuidv4();
-    const canvas = createCanvas(160, 160, 'png');
-    const ctx = canvas.getContext('2d');
     const frame = frames.find(frame => frame.isThumb) || frames[0];
-
-    const squareSize = 20;
     const {pixels = []} = frame;
-
-    let position = 0;
-
-    for (let i = 0; i < 8; i++) {
-        for (let x = 0; x < 8; x++) {
-            const xOffset = x * squareSize;
-            const yOffset = i * squareSize;
-            const pixel = pixels.find(px => px.position === position) || {};
-            const {color = '000000'} = pixel;
-
-            ctx.fillStyle = `#${color}`;
-            ctx.fillRect(xOffset, yOffset, squareSize, squareSize);
-
-            position++;
-        }
-    }
+    const buffer = pixelsToImage(pixels, {canvasSize: 160, squareSize: 20});
 
     const fileName = await new Promise((resolve, reject) => {
         return s3.upload({
             Bucket: 'feelsbox-push',
             Key: `${uid}.png`,
-            Body: canvas.toBuffer(),
+            Body: buffer,
             ContentEncoding: 'base64',
             ContentType: 'image/png',
             ACL:'public-read'

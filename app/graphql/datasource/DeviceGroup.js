@@ -51,7 +51,6 @@ export default class DeviceGroupAPI extends MongooseAPI {
         });
 
         for (const room of rooms) {
-            console.log(room)
             socket().to(room).emit('stop');
         }
     };

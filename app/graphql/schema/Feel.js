@@ -1,7 +1,8 @@
 import {gql} from 'apollo-server-express';
 import {get} from 'lodash';
+import {encode} from 'base64-arraybuffer';
 
-import socket from '-/socket';
+import {pixelsToImage} from '-/utils/image';
 
 export const typeDefs = gql`
     type FeelFramePixel {
@@ -13,7 +14,8 @@ export const typeDefs = gql`
         brightness: Float
         duration: Int
         isThumb: Boolean
-        pixels: [FeelFramePixel]
+        pixels: [FeelFramePixel],
+        uri: String
     }
 
     type FeelPanoramaStep {
@@ -247,6 +249,14 @@ export const resolvers = {
             const pixels = get(parent, 'panorama.pixels', []);
 
             return pixels.length;
+        }
+    },
+    FeelFrame: {
+        uri: async parent => {
+            const pixels = get(parent, 'pixels', []);
+            const imageBuffer = pixelsToImage(pixels, {canvasSize: 160, squareSize: 20});
+
+            return encode(imageBuffer);
         }
     }
 };

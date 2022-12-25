@@ -15,7 +15,7 @@ const updateCategories = async () => {
         const payload = {
             categories: !category ? [] : [category]
         };
-        console.log(payload)
+        
         await feel.update(payload);
     }
 };
