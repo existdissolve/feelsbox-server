@@ -9,6 +9,7 @@ export const init = server => {
     const socketInstance = socketio(server);
 
     socketInstance.on('connection', socket => {
+        logger.info('socket connection established');
         socket.on('joinroom', (room, ip, version) => {
             logger.info('room', room);
             socket.join(room);
